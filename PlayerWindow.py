@@ -9,7 +9,9 @@ CANVAS_WIDTH_SU = 30
 CANVAS_WIDTH_SU = 20
 TOTAL_HEIGHT_SU = 20
 
-SPRING_SIZE = 0.3
+SPRING_SIZE = 0.7
+DRAGON_SIZE = 0.3
+SHELL_SIZE = 0.3
 
 
 class PlayerCanvas(ResizingCanvas):
@@ -24,6 +26,7 @@ class PlayerCanvas(ResizingCanvas):
     def fill_from_player_board_state(self):
         self.clear()  # clears canvas and draws board stuff
 
+        # draw tiles
         for i in range(GRID_SIZE):
             for j in range(GRID_SIZE):
                 if self.player_board_state[0][i, j] > 0:
@@ -34,27 +37,63 @@ class PlayerCanvas(ResizingCanvas):
                         int(self.height / GRID_SIZE * (i + 1)),
                         fill=COLORS[(self.player_board_state[0][i, j]) % SPRING],
                     )
-                    if self.player_board_state[0][i, j] > SPRING:
 
+                    # draw springs
+                    if self.player_board_state[0][i, j] >= SPRING:
                         self.create_oval(
                             int(
                                 self.width / GRID_SIZE * j
-                                + self.width / GRID_SIZE * SPRING_SIZE
+                                + self.width / GRID_SIZE * (1 - SPRING_SIZE)
                             ),
                             int(
                                 self.height / GRID_SIZE * i
-                                + self.height / GRID_SIZE * SPRING_SIZE
+                                + self.height / GRID_SIZE * (1 - SPRING_SIZE)
                             ),
                             int(
                                 self.width / GRID_SIZE * (j + 1)
-                                - self.width / GRID_SIZE * SPRING_SIZE
+                                - self.width / GRID_SIZE * (1 - SPRING_SIZE)
                             ),
                             int(
                                 self.height / GRID_SIZE * (i + 1)
-                                - self.height / GRID_SIZE * SPRING_SIZE
+                                - self.height / GRID_SIZE * (1 - SPRING_SIZE)
                             ),
                             fill="#0c008f",
                         )
+
+        # draw dragons and shells
+        for i in range(GRID_SIZE * 2):  # double the possibilities
+            for j in range(GRID_SIZE):
+                if self.player_board_state[1][i, j] > 0:
+
+                    index_center_x = j + 0.5 if i % 2 == 0 else j
+                    index_center_y = i / 2.0
+
+                    if self.player_board_state[1][i, j] < EMPTY_SHELL:
+                        # dragon
+                        self.create_oval(
+                            int(
+                                self.width / GRID_SIZE * index_center_x
+                                - self.width / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.height / GRID_SIZE * index_center_y
+                                - self.height / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.width / GRID_SIZE * index_center_x
+                                + self.width / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.height / GRID_SIZE * index_center_y
+                                + self.height / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            fill=COLORS[self.player_board_state[1][i, j]],
+                            outline="#222222",
+                            width=3,
+                        )
+                    else:
+                        # shell
+                        pass
 
     def clear(self):
         self.addtag_all("all")
