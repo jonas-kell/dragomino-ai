@@ -17,6 +17,19 @@ MOUNTAINS = 5
 VULCANO = 6
 
 SPRING = 10  # (value >= spring) gives if the field has a spring, (value % spring) gives the biom
+EMPTY_SHELL = 10
+
+BIOMS = [SNOW, DESSERT, PLAINS, FOREST, MOUNTAINS, VULCANO]  # only for iteration over
+
+BIOM_NAMES = [
+    "EMPTY",  # EMPTY_BIOM
+    "SCHNEE",  # SNOW
+    "WÜSTE",  # DESERT
+    "GRAß",  # PLAINS
+    "WALD",  # FOREST
+    "BERG",  # MOUNTAINS
+    "VULKAN",  # VULCANO
+]
 
 COLORS = [
     "#000000",  # EMPTY_BIOM
@@ -28,7 +41,7 @@ COLORS = [
     "#ff582e",  # VULCANO
 ]
 
-TOTAL_EGGS = [
+NR_TOTAL_EGGS = [
     0,  # EMPTY_BIOM
     13,  # SNOW
     14,  # DESSERT
