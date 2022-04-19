@@ -1,3 +1,4 @@
+from quopri import decodestring
 from game_constants import *
 
 ACTION_SET_TILE = "ACTION_SET_TILE"
@@ -25,3 +26,9 @@ def action_player_injector(global_update_callback, player, game_state):
     return lambda action, **args: action_handler(
         global_update_callback, player, game_state, action, **args
     )
+
+
+def game_description(player, game_state):
+    description_string = ""
+
+    return description_string

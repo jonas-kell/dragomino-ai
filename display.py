@@ -18,7 +18,8 @@ def main():
         player_windows[i] = PlayerWindow(
             root,
             "Player " + str(i),
-            game_state[i],
+            i,
+            game_state,
             action_player_injector(force_redraw, i, game_state),
         )
 

@@ -3,6 +3,7 @@ import tkinter as tk
 from ResizingCanvas import ResizingCanvas
 from game_constants import *
 from game_logic import ACTION_SET_TILE
+from game_logic import game_description
 
 CANVAS_WIDTH_SU = 30
 CANVAS_WIDTH_SU = 20
@@ -67,9 +68,17 @@ class PlayerCanvas(ResizingCanvas):
 
 
 class PlayerWindow:
-    def __init__(self, tk_root_window, title, player_board_state, action_callback):
+    def __init__(
+        self,
+        tk_root_window,
+        title,
+        player_index,
+        game_board_state,
+        action_callback,
+    ):
 
-        self.player_board_state = player_board_state
+        self.player_index = player_index
+        self.game_board_state = game_board_state
         self.action_callback = action_callback
 
         self.tkwindow = tk.Toplevel(
@@ -80,22 +89,25 @@ class PlayerWindow:
         self.tkwindow.title(title)
 
         # right aligned text box
+        self.description = tk.StringVar()
+        self.description.set(game_description(self.player_index, self.game_board_state))
         self.stats = tk.Label(
             self.tkwindow,
             width=CANVAS_WIDTH_SU,
             height=TOTAL_HEIGHT_SU,
-            text="Test Text \n asd\n asdasd",
+            textvariable=self.description,
         )
         self.stats.pack(side=tk.RIGHT, expand=tk.YES, fill=tk.BOTH)
 
         # canvas to fill space
         self.canvas = PlayerCanvas(
             self.tkwindow,
-            player_board_state,
-            action_callback,
+            self.game_board_state[self.player_index],
+            self.action_callback,
             highlightthickness=0,
         )
         self.canvas.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
 
     def force_redraw(self):
+        self.description.set(game_description(self.player_index, self.game_board_state))
         self.canvas.force_redraw()
