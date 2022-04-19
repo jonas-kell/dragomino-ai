@@ -2,6 +2,7 @@ import tkinter as tk
 
 from ResizingCanvas import ResizingCanvas
 from game_constants import *
+from game_logic import ACTION_SET_TILE
 
 CANVAS_WIDTH_SU = 30
 CANVAS_WIDTH_SU = 20
@@ -9,10 +10,11 @@ TOTAL_HEIGHT_SU = 20
 
 
 class PlayerCanvas(ResizingCanvas):
-    def __init__(self, parent, player_board_state, **kwargs):
+    def __init__(self, parent, player_board_state, action_callback, **kwargs):
         ResizingCanvas.__init__(self, parent, self.handle_click, **kwargs)
 
         self.player_board_state = player_board_state
+        self.action_callback = action_callback
 
         self.fill_from_player_board_state()
 
@@ -31,6 +33,7 @@ class PlayerCanvas(ResizingCanvas):
                     )
 
     def clear(self):
+        self.addtag_all("all")
         self.delete("all")
         self.init_grid()
 
@@ -57,28 +60,36 @@ class PlayerCanvas(ResizingCanvas):
         grid_x = int(((float(event.x) / self.width) * GRID_SIZE) // 1)
         grid_y = int(((float(event.y) / self.height) * GRID_SIZE) // 1)
 
-        print(grid_x, grid_y)
+        self.action_callback(ACTION_SET_TILE, gx=grid_x, gy=grid_y)
 
 
-def generate_player_window(tk_root_window, title, player_board_state):
-    tkwindow = tk.Toplevel(
-        tk_root_window, width=CANVAS_WIDTH_SU + CANVAS_WIDTH_SU, height=TOTAL_HEIGHT_SU
-    )
-    tkwindow.title(title)
+class PlayerWindow:
+    def __init__(self, tk_root_window, title, player_board_state, action_callback):
 
-    # right aligned text box
-    stats = tk.Label(
-        tkwindow,
-        width=CANVAS_WIDTH_SU,
-        height=TOTAL_HEIGHT_SU,
-        text="Test Text \n asd\n asdasd",
-    )
-    stats.pack(side=tk.RIGHT, expand=tk.YES, fill=tk.BOTH)
+        self.player_board_state = player_board_state
+        self.action_callback = action_callback
 
-    # canvas to fill space
-    mycanvas = PlayerCanvas(
-        tkwindow,
-        player_board_state,
-        highlightthickness=0,
-    )
-    mycanvas.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+        self.tkwindow = tk.Toplevel(
+            tk_root_window,
+            width=CANVAS_WIDTH_SU + CANVAS_WIDTH_SU,
+            height=TOTAL_HEIGHT_SU,
+        )
+        self.tkwindow.title(title)
+
+        # right aligned text box
+        self.stats = tk.Label(
+            self.tkwindow,
+            width=CANVAS_WIDTH_SU,
+            height=TOTAL_HEIGHT_SU,
+            text="Test Text \n asd\n asdasd",
+        )
+        self.stats.pack(side=tk.RIGHT, expand=tk.YES, fill=tk.BOTH)
+
+        # canvas to fill space
+        self.canvas = PlayerCanvas(
+            self.tkwindow,
+            player_board_state,
+            action_callback,
+            highlightthickness=0,
+        )
+        self.canvas.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
