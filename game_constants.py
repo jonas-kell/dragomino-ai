@@ -8,6 +8,7 @@ assert GRID_SIZE > 5
 
 GRID_CENTER = GRID_SIZE // 2
 
+EMPTY_BIOM = 0
 SNOW = 1
 DESSERT = 2
 PLAINS = 3
@@ -15,10 +16,10 @@ FOREST = 4
 MOUNTAINS = 5
 VULCANO = 6
 
-SPRING = 10
+SPRING = 10  # (value >= spring) gives if the field has a spring, (value % spring) gives the biom
 
 COLORS = [
-    "#000000",  # EMPTY
+    "#000000",  # EMPTY_BIOM
     "#00bfff",  # SNOW
     "#ffd700",  # DESERT
     "#adff2f",  # PLAINS
@@ -28,6 +29,7 @@ COLORS = [
 ]
 
 TOTAL_EGGS = [
+    0,  # EMPTY_BIOM
     13,  # SNOW
     14,  # DESSERT
     12,  # PLAINS
@@ -37,6 +39,7 @@ TOTAL_EGGS = [
 ]
 
 NR_DRAGONS_IN_EGGS = [
+    0,  # EMPTY_BIOM
     7,  # SNOW
     7,  # DESSERT
     7,  # PLAINS
