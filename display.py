@@ -16,7 +16,7 @@ class ResizingCanvas(tk.Canvas):
         self.width = self.winfo_reqwidth()
 
         self.color = COLOR
-        self.linewidth = 1
+        self.linewidth = 2
 
         self.bind("<Configure>", self.resize)
         self.bind("<ButtonRelease-1>", self.handle_click)
@@ -29,17 +29,14 @@ class ResizingCanvas(tk.Canvas):
 
         player_index = 0
 
-        square_width = self.width // GRID_SIZE
-        square_height = self.height // GRID_SIZE
-
         for i in range(GRID_SIZE):
             for j in range(GRID_SIZE):
                 if self.game_state[player_index][0][i, j] > 0:
                     self.create_rectangle(
-                        j * square_width,
-                        i * square_height,
-                        (j + 1) * square_width,
-                        (i + 1) * square_height,
+                        int(self.width / GRID_SIZE * j),
+                        int(self.height / GRID_SIZE * i),
+                        int(self.width / GRID_SIZE * (j + 1)),
+                        int(self.height / GRID_SIZE * (i + 1)),
                         fill=COLORS[(self.game_state[player_index][0][i, j]) % SPRING],
                     )
 
