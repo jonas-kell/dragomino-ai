@@ -10,8 +10,8 @@ CANVAS_WIDTH_SU = 20
 TOTAL_HEIGHT_SU = 20
 
 SPRING_SIZE = 0.7
-DRAGON_SIZE = 0.3
-SHELL_SIZE = 0.3
+DRAGON_SIZE = 0.25
+SHELL_SIZE = 0.1
 
 
 class PlayerCanvas(ResizingCanvas):
@@ -93,7 +93,86 @@ class PlayerCanvas(ResizingCanvas):
                         )
                     else:
                         # shell
-                        pass
+                        self.create_line(
+                            int(
+                                self.width / GRID_SIZE * index_center_x
+                                - self.width / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.height / GRID_SIZE * index_center_y
+                                - self.height / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.width / GRID_SIZE * index_center_x
+                                + self.width / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.height / GRID_SIZE * index_center_y
+                                + self.height / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            fill="#222222",
+                            width=4,
+                        )
+                        self.create_line(
+                            int(
+                                self.width / GRID_SIZE * index_center_x
+                                - self.width / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.height / GRID_SIZE * index_center_y
+                                - self.height / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.width / GRID_SIZE * index_center_x
+                                + self.width / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.height / GRID_SIZE * index_center_y
+                                + self.height / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            fill=COLORS[self.player_board_state[1][i, j] % EMPTY_SHELL],
+                            width=2,
+                        )
+                        self.create_line(
+                            int(
+                                self.width / GRID_SIZE * index_center_x
+                                + self.width / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.height / GRID_SIZE * index_center_y
+                                - self.height / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.width / GRID_SIZE * index_center_x
+                                - self.width / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.height / GRID_SIZE * index_center_y
+                                + self.height / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            fill="#222222",
+                            width=4,
+                        )
+                        self.create_line(
+                            int(
+                                self.width / GRID_SIZE * index_center_x
+                                + self.width / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.height / GRID_SIZE * index_center_y
+                                - self.height / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.width / GRID_SIZE * index_center_x
+                                - self.width / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            int(
+                                self.height / GRID_SIZE * index_center_y
+                                + self.height / GRID_SIZE * DRAGON_SIZE
+                            ),
+                            fill=COLORS[self.player_board_state[1][i, j] % EMPTY_SHELL],
+                            width=2,
+                        )
 
     def clear(self):
         self.addtag_all("all")
