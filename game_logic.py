@@ -10,7 +10,7 @@ def action_handler(global_update_callback, player, game_state, action, **args):
     # print(game_state)
 
     if action == ACTION_SET_TILE:
-        tile = TILES[2]
+        tile = TILES[23]
         game_state[player][0][args["gy"], args["gx"]] = tile[0]
         game_state[player][0][args["gy"], args["gx"] + 1] = tile[1]
     else:

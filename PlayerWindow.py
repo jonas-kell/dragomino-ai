@@ -9,6 +9,8 @@ CANVAS_WIDTH_SU = 30
 CANVAS_WIDTH_SU = 20
 TOTAL_HEIGHT_SU = 20
 
+SPRING_SIZE = 0.3
+
 
 class PlayerCanvas(ResizingCanvas):
     def __init__(self, parent, player_board_state, action_callback, **kwargs):
@@ -32,6 +34,27 @@ class PlayerCanvas(ResizingCanvas):
                         int(self.height / GRID_SIZE * (i + 1)),
                         fill=COLORS[(self.player_board_state[0][i, j]) % SPRING],
                     )
+                    if self.player_board_state[0][i, j] > SPRING:
+
+                        self.create_oval(
+                            int(
+                                self.width / GRID_SIZE * j
+                                + self.width / GRID_SIZE * SPRING_SIZE
+                            ),
+                            int(
+                                self.height / GRID_SIZE * i
+                                + self.height / GRID_SIZE * SPRING_SIZE
+                            ),
+                            int(
+                                self.width / GRID_SIZE * (j + 1)
+                                - self.width / GRID_SIZE * SPRING_SIZE
+                            ),
+                            int(
+                                self.height / GRID_SIZE * (i + 1)
+                                - self.height / GRID_SIZE * SPRING_SIZE
+                            ),
+                            fill="#0c008f",
+                        )
 
     def clear(self):
         self.addtag_all("all")
