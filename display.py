@@ -1,10 +1,7 @@
 import tkinter as tk
 from matplotlib.pyplot import margins
-import numpy as np
 
-GRID_SIZE = 10
-GRID_CENTER = GRID_SIZE // 2
-PLAYER_COUNT = 1
+from board_helpers import *
 
 COLOR = "#222222"
 BACKGROUND = "grey"
@@ -24,17 +21,8 @@ class ResizingCanvas(tk.Canvas):
         self.bind("<Configure>", self.resize)
         self.bind("<ButtonRelease-1>", self.handle_click)
 
-        self.init_empty_game_state()  # presets empty arrays
+        self.game_state = init_empty_game_state()  # presets empty arrays
         self.fill_from_game_state()
-
-    def init_empty_game_state(self):
-        self.players = [0 for i in range(PLAYER_COUNT)]
-
-        for i in range(PLAYER_COUNT):
-            self.players = [
-                np.zeros((GRID_SIZE, GRID_SIZE)),  # fields
-                np.zeros((GRID_SIZE, GRID_SIZE)),  # eggs/daragons
-            ]
 
     def fill_from_game_state(self):
         self.clear()  # draws board stuff
@@ -120,7 +108,3 @@ def main():
 
     # main draw loop
     root.mainloop()
-
-
-if __name__ == "__main__":
-    main()

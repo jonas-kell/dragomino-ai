@@ -1,0 +1,7 @@
+PLAYER_COUNT = 3
+
+GRID_SIZE = 10
+GRID_CENTER = 5
+
+assert(PLAYER_COUNT > 0)
+assert(PLAYER_COUNT < 5)
