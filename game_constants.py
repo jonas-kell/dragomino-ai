@@ -8,14 +8,17 @@ assert GRID_SIZE > 5
 
 GRID_CENTER = GRID_SIZE // 2
 
-SNOW = 0
-DESSERT = 1
-PLAINS = 2
-FOREST = 3
-MOUNTAINS = 4
-VULCANO = 5
+SNOW = 1
+DESSERT = 2
+PLAINS = 3
+FOREST = 4
+MOUNTAINS = 5
+VULCANO = 6
+
+SPRING = 10
 
 COLORS = [
+    "#000000",  # EMPTY
     "#00bfff",  # SNOW
     "#ffd700",  # DESERT
     "#adff2f",  # PLAINS
@@ -42,37 +45,37 @@ NR_DRAGONS_IN_EGGS = [
     7,  # VULCANO
 ]
 
-# in format [tile_index, BiomIndex1, BiomIndex2, SpringOn1, SpringOn2]
+# in format [tile_index, BiomIndex1, BiomIndex2]
 
 STARTING_TILE = [0, DESSERT, SNOW, False, False]
 
 TILES = [
-    [1, SNOW, PLAINS, True, False],
-    [2, SNOW, PLAINS, True, False],
-    [3, SNOW, FOREST, False, False],
-    [4, SNOW, FOREST, False, False],
-    [5, SNOW, MOUNTAINS, False, False],
-    [6, SNOW, MOUNTAINS, False, False],
-    [7, SNOW, SNOW, True, False],
-    [8, PLAINS, FOREST, False, False],
-    [9, PLAINS, FOREST, False, False],
-    [10, PLAINS, MOUNTAINS, False, False],
-    [11, PLAINS, MOUNTAINS, False, False],
-    [12, PLAINS, VULCANO, False, False],
-    [13, SNOW, VULCANO, False, False],
-    [14, SNOW, VULCANO, False, False],
-    [15, FOREST, MOUNTAINS, False, False],
-    [16, FOREST, MOUNTAINS, False, False],
-    [17, FOREST, VULCANO, False, False],
-    [18, FOREST, VULCANO, False, False],
-    [19, MOUNTAINS, VULCANO, False, False],
-    [20, DESSERT, VULCANO, False, False],
-    [21, DESSERT, VULCANO, False, False],
-    [22, DESSERT, PLAINS, True, False],
-    [23, DESSERT, PLAINS, True, False],
-    [24, DESSERT, PLAINS, False, True],
-    [25, DESSERT, FOREST, False, False],
-    [26, DESSERT, FOREST, False, False],
-    [27, DESSERT, MOUNTAINS, False, False],
-    [28, DESSERT, DESSERT, True, False],
+    [1, SNOW + SPRING, PLAINS],
+    [2, SNOW + SPRING, PLAINS],
+    [3, SNOW, FOREST],
+    [4, SNOW, FOREST],
+    [5, SNOW, MOUNTAINS],
+    [6, SNOW, MOUNTAINS],
+    [7, SNOW + SPRING, SNOW],
+    [8, PLAINS, FOREST],
+    [9, PLAINS, FOREST],
+    [10, PLAINS, MOUNTAINS],
+    [11, PLAINS, MOUNTAINS],
+    [12, PLAINS, VULCANO],
+    [13, SNOW, VULCANO],
+    [14, SNOW, VULCANO],
+    [15, FOREST, MOUNTAINS],
+    [16, FOREST, MOUNTAINS],
+    [17, FOREST, VULCANO],
+    [18, FOREST, VULCANO],
+    [19, MOUNTAINS, VULCANO],
+    [20, DESSERT, VULCANO],
+    [21, DESSERT, VULCANO],
+    [22, DESSERT + SPRING, PLAINS],
+    [23, DESSERT + SPRING, PLAINS],
+    [24, DESSERT, PLAINS + SPRING],
+    [25, DESSERT, FOREST],
+    [26, DESSERT, FOREST],
+    [27, DESSERT, MOUNTAINS],
+    [28, DESSERT + SPRING, DESSERT],
 ]

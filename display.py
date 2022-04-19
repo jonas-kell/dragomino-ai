@@ -1,5 +1,5 @@
 import tkinter as tk
-from matplotlib.pyplot import margins
+from matplotlib.pyplot import fill, margins
 
 from board_helpers import *
 
@@ -25,13 +25,23 @@ class ResizingCanvas(tk.Canvas):
         self.fill_from_game_state()
 
     def fill_from_game_state(self):
-        self.clear()  # draws board stuff
+        self.clear()  # clears canvas and draws board stuff
 
-        # cell_width = self.width / self.rows
-        # cell_height = self.height / self.rows
-        # padding_factor = 0.2
-        # cell_width_padding = self.width / self.rows * padding_factor
-        # cell_height_padding = self.height / self.rows * padding_factor
+        player_index = 0
+
+        square_width = self.width // GRID_SIZE
+        square_height = self.height // GRID_SIZE
+
+        for i in range(GRID_SIZE):
+            for j in range(GRID_SIZE):
+                if self.game_state[player_index][0][i, j] > 0:
+                    self.create_rectangle(
+                        j * square_width,
+                        i * square_height,
+                        (j + 1) * square_width,
+                        (i + 1) * square_height,
+                        fill=COLORS[(self.game_state[player_index][0][i, j]) % SPRING],
+                    )
 
     def handle_click(self, event):
         grid_x = int(((float(event.x) / self.width) * GRID_SIZE) // 1)
