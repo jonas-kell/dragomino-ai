@@ -62,6 +62,9 @@ class PlayerCanvas(ResizingCanvas):
 
         self.action_callback(ACTION_SET_TILE, gx=grid_x, gy=grid_y)
 
+    def force_redraw(self):
+        self.fill_from_player_board_state()
+
 
 class PlayerWindow:
     def __init__(self, tk_root_window, title, player_board_state, action_callback):
@@ -93,3 +96,6 @@ class PlayerWindow:
             highlightthickness=0,
         )
         self.canvas.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+
+    def force_redraw(self):
+        self.canvas.force_redraw()
