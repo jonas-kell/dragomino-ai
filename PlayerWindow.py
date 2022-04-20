@@ -6,7 +6,7 @@ from game_logic import ACTION_SET_TILE
 from game_logic import game_description
 
 CANVAS_WIDTH_SU = 30
-CANVAS_WIDTH_SU = 20
+STATS_WIDTH_SU = 20
 TOTAL_HEIGHT_SU = 20
 
 SPRING_SIZE = 0.7
@@ -217,14 +217,13 @@ class PlayerWindow:
         game_board_state,
         action_callback,
     ):
-
         self.player_index = player_index
         self.game_board_state = game_board_state
         self.action_callback = action_callback
 
         self.tkwindow = tk.Toplevel(
             tk_root_window,
-            width=CANVAS_WIDTH_SU + CANVAS_WIDTH_SU,
+            width=CANVAS_WIDTH_SU + STATS_WIDTH_SU,
             height=TOTAL_HEIGHT_SU,
         )
         self.tkwindow.title(title)
@@ -234,7 +233,7 @@ class PlayerWindow:
         self.description.set(game_description(self.player_index, self.game_board_state))
         self.stats = tk.Label(
             self.tkwindow,
-            width=CANVAS_WIDTH_SU,
+            width=STATS_WIDTH_SU,
             height=TOTAL_HEIGHT_SU,
             textvariable=self.description,
         )

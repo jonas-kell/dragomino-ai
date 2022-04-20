@@ -2,6 +2,7 @@ import numpy as np
 from game_constants import *
 
 ACTION_SET_TILE = "ACTION_SET_TILE"
+ACTION_PICK_TILE = "ACTION_PICK_TILE"
 
 
 def action_handler(global_update_callback, player, game_state, action, **args):
@@ -25,6 +26,12 @@ def action_handler(global_update_callback, player, game_state, action, **args):
 def action_player_injector(global_update_callback, player, game_state):
     return lambda action, **args: action_handler(
         global_update_callback, player, game_state, action, **args
+    )
+
+
+def action_injector(global_update_callback, game_state):
+    return lambda action, **args: action_handler(
+        global_update_callback, -1, game_state, action, **args
     )
 
 
