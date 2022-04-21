@@ -123,10 +123,13 @@ class MainCanvas(ResizingCanvas):
         self.delete("all")
 
     def handle_click(self, event):
-        # grid_x = int(((float(event.x) / self.width) * GRID_SIZE) // 1)
-        # grid_y = int(((float(event.y) / self.height) * GRID_SIZE) // 1)
+        index = int(
+            (((float(event.x) / self.width) * ROWS) // 1) * (len(TILES) // ROWS)
+            + (((float(event.y) / self.height) * (len(TILES) // ROWS)) // 1)
+            + 1
+        )
 
-        self.action_callback(ACTION_PICK_TILE, tile_index=1)
+        self.action_callback(ACTION_PICK_TILE, tile_index=index)
 
     def force_redraw(self):
         self.fill_from_game_board_state()
