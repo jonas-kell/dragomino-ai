@@ -24,21 +24,36 @@ def action_handler(global_update_callback, player, game_state, action, **args):
     # !set tile
     if action == ACTION_SET_TILE:
         if len(game_state[PLAYER_COUNT][SELECTED_TILE_INDEX]) > 0:
-            tile = TILES[game_state[PLAYER_COUNT][SELECTED_TILE_INDEX].pop(0)]
+            if not fits_on_board(
+                GRID_SIZE,
+                args["gx"],
+                args["gy"],
+                game_state[player][SECOND_TILE_TURN_INDEX][1],
+                game_state[player][SECOND_TILE_TURN_INDEX][0],
+            ) or board_obstructed(
+                game_state[player][BIOM_INDEX],
+                args["gx"],
+                args["gy"],
+                game_state[player][SECOND_TILE_TURN_INDEX][1],
+                game_state[player][SECOND_TILE_TURN_INDEX][0],
+            ):
+                print("placement doesn't fit")
+            else:
+                tile = TILES[game_state[PLAYER_COUNT][SELECTED_TILE_INDEX].pop(0)]
 
-            game_state[player][BIOM_INDEX][args["gy"], args["gx"]] = tile[
-                TILE_INDEX_FIRST
-            ]
-            game_state[player][BIOM_INDEX][
-                args["gy"] + game_state[player][SECOND_TILE_TURN_INDEX][0],
-                args["gx"] + game_state[player][SECOND_TILE_TURN_INDEX][1],
-            ] = tile[TILE_INDEX_SECOND]
+                game_state[player][BIOM_INDEX][args["gy"], args["gx"]] = tile[
+                    TILE_INDEX_FIRST
+                ]
+                game_state[player][BIOM_INDEX][
+                    args["gy"] + game_state[player][SECOND_TILE_TURN_INDEX][0],
+                    args["gx"] + game_state[player][SECOND_TILE_TURN_INDEX][1],
+                ] = tile[TILE_INDEX_SECOND]
 
-            game_state[PLAYER_COUNT][USED_TILE_INDEX].append(tile[TILE_INDEX_INDEX])
+                game_state[PLAYER_COUNT][USED_TILE_INDEX].append(tile[TILE_INDEX_INDEX])
+
+                clear_previews(game_state)  # clear preview after placing
         else:
             print("no tile selected")
-
-        clear_previews(game_state)  # clear preview after placing
 
     # !pick tile
     if action == ACTION_PICK_TILE:
@@ -76,17 +91,26 @@ def action_handler(global_update_callback, player, game_state, action, **args):
     # !preview tile, also updates after turning and not moving
     if action == ACTION_PREVIEW_TILE or action == ACTION_TURN_TILE:
         if len(game_state[PLAYER_COUNT][SELECTED_TILE_INDEX]) > 0:
-            tile = TILES[game_state[PLAYER_COUNT][SELECTED_TILE_INDEX][0]]
+            if not fits_on_board(
+                GRID_SIZE,
+                args["gx"],
+                args["gy"],
+                game_state[player][SECOND_TILE_TURN_INDEX][1],
+                game_state[player][SECOND_TILE_TURN_INDEX][0],
+            ):
+                print("preview doesn't fit")
+            else:
+                tile = TILES[game_state[PLAYER_COUNT][SELECTED_TILE_INDEX][0]]
 
-            clear_previews(game_state)  # clear than overwrite
+                clear_previews(game_state)  # clear than overwrite
 
-            game_state[player][BIOM_INDEX_PREVIEW][args["gy"], args["gx"]] = tile[
-                TILE_INDEX_FIRST
-            ]
-            game_state[player][BIOM_INDEX_PREVIEW][
-                args["gy"] + game_state[player][SECOND_TILE_TURN_INDEX][0],
-                args["gx"] + game_state[player][SECOND_TILE_TURN_INDEX][1],
-            ] = tile[TILE_INDEX_SECOND]
+                game_state[player][BIOM_INDEX_PREVIEW][args["gy"], args["gx"]] = tile[
+                    TILE_INDEX_FIRST
+                ]
+                game_state[player][BIOM_INDEX_PREVIEW][
+                    args["gy"] + game_state[player][SECOND_TILE_TURN_INDEX][0],
+                    args["gx"] + game_state[player][SECOND_TILE_TURN_INDEX][1],
+                ] = tile[TILE_INDEX_SECOND]
 
     # trigger global update
     global_update_callback()
@@ -159,3 +183,29 @@ def calc_own_scores(player_index, game_state):
         shells += info[biom + EMPTY_SHELL]
 
     return eggs, shells
+
+
+def fits_on_board(size, index_x, index_y, offset_index_x, offset_index_y):
+    if size <= 0:
+        return False
+
+    if index_x < 0 or index_x >= size:
+        return False
+
+    if index_y < 0 or index_y >= size:
+        return False
+
+    if index_x + offset_index_x < 0 or index_x + offset_index_x >= size:
+        return False
+
+    if index_y + offset_index_y < 0 or index_y + offset_index_y >= size:
+        return False
+
+    return True
+
+
+def board_obstructed(board_array, index_x, index_y, offset_index_x, offset_index_y):
+    return (
+        board_array[index_y, index_x] != 0
+        or board_array[index_y + offset_index_y, index_x + offset_index_x] != 0
+    )
