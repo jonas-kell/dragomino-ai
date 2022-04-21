@@ -97,9 +97,7 @@ class PlayerCanvas(ResizingCanvas):
                                 self.height / GRID_SIZE * index_center_y
                                 + self.height / GRID_SIZE * DRAGON_SIZE
                             ),
-                            fill=COLORS[
-                                self.player_board_state[TILE_INDEX_FIRST][i, j]
-                            ],
+                            fill=COLORS[self.player_board_state[EGG_INDEX][i, j]],
                             outline="#222222",
                             width=3,
                         )
