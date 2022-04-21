@@ -1,7 +1,7 @@
 import tkinter as tk
 
 from ResizingCanvas import ResizingCanvas
-from board_helpers import BIOM_INDEX, EGG_INDEX
+from board_helpers import BIOM_INDEX, BIOM_INDEX_PREVIEW, EGG_INDEX
 from game_constants import *
 from game_logic import ACTION_PREVIEW_TILE, ACTION_SET_TILE, ACTION_TURN_TILE
 from game_logic import game_description
@@ -37,38 +37,14 @@ class PlayerCanvas(ResizingCanvas):
         # draw tiles
         for i in range(GRID_SIZE):
             for j in range(GRID_SIZE):
-                if self.player_board_state[BIOM_INDEX][i, j] > 0:
-                    self.create_rectangle(
-                        int(self.width / GRID_SIZE * j),
-                        int(self.height / GRID_SIZE * i),
-                        int(self.width / GRID_SIZE * (j + 1)),
-                        int(self.height / GRID_SIZE * (i + 1)),
-                        fill=COLORS[
-                            (self.player_board_state[BIOM_INDEX][i, j]) % SPRING
-                        ],
-                    )
+                self.draw_biom_tile(self.player_board_state[BIOM_INDEX][i, j], j, i)
 
-                    # draw springs
-                    if self.player_board_state[BIOM_INDEX][i, j] >= SPRING:
-                        self.create_oval(
-                            int(
-                                self.width / GRID_SIZE * j
-                                + self.width / GRID_SIZE * (1 - SPRING_SIZE)
-                            ),
-                            int(
-                                self.height / GRID_SIZE * i
-                                + self.height / GRID_SIZE * (1 - SPRING_SIZE)
-                            ),
-                            int(
-                                self.width / GRID_SIZE * (j + 1)
-                                - self.width / GRID_SIZE * (1 - SPRING_SIZE)
-                            ),
-                            int(
-                                self.height / GRID_SIZE * (i + 1)
-                                - self.height / GRID_SIZE * (1 - SPRING_SIZE)
-                            ),
-                            fill="#0c008f",
-                        )
+        # draw preview
+        for i in range(GRID_SIZE):
+            for j in range(GRID_SIZE):
+                self.draw_biom_tile(
+                    self.player_board_state[BIOM_INDEX_PREVIEW][i, j], j, i, True
+                )
 
         # draw dragons and shells
         for i in range(GRID_SIZE * 2):  # double the possibilities
@@ -187,6 +163,39 @@ class PlayerCanvas(ResizingCanvas):
                             ],
                             width=2,
                         )
+
+    def draw_biom_tile(self, biom_index, x_index, y_index, preview=False):
+        if biom_index > 0:
+            self.create_rectangle(
+                int(self.width / GRID_SIZE * x_index),
+                int(self.height / GRID_SIZE * y_index),
+                int(self.width / GRID_SIZE * (x_index + 1)),
+                int(self.height / GRID_SIZE * (y_index + 1)),
+                fill=COLORS[(biom_index) % SPRING],
+                stipple="gray50" if preview else "",
+            )
+
+            # draw springs
+            if biom_index >= SPRING:
+                self.create_oval(
+                    int(
+                        self.width / GRID_SIZE * x_index
+                        + self.width / GRID_SIZE * (1 - SPRING_SIZE)
+                    ),
+                    int(
+                        self.height / GRID_SIZE * y_index
+                        + self.height / GRID_SIZE * (1 - SPRING_SIZE)
+                    ),
+                    int(
+                        self.width / GRID_SIZE * (x_index + 1)
+                        - self.width / GRID_SIZE * (1 - SPRING_SIZE)
+                    ),
+                    int(
+                        self.height / GRID_SIZE * (y_index + 1)
+                        - self.height / GRID_SIZE * (1 - SPRING_SIZE)
+                    ),
+                    fill="#0c008f",
+                )
 
     def clear(self):
         self.addtag_all("all")

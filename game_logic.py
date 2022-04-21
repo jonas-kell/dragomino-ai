@@ -2,10 +2,12 @@ import numpy as np
 from array_helpers import in_array
 from board_helpers import (
     BIOM_INDEX,
+    BIOM_INDEX_PREVIEW,
     EGG_INDEX,
     SECOND_TILE_TURN_INDEX,
     SELECTED_TILE_INDEX,
     USED_TILE_INDEX,
+    clear_previews,
 )
 from game_constants import *
 
@@ -16,7 +18,8 @@ ACTION_PREVIEW_TILE = "ACTION_PREVIEW_TILE"
 
 
 def action_handler(global_update_callback, player, game_state, action, **args):
-    print("Player " + str(player) + " wants action: " + action)
+    if action is not ACTION_PREVIEW_TILE:  # reduce spam
+        print("Player " + str(player) + " wants action: " + action)
 
     # !set tile
     if action == ACTION_SET_TILE:
@@ -35,8 +38,10 @@ def action_handler(global_update_callback, player, game_state, action, **args):
         else:
             print("no tile selected")
 
+        clear_previews(game_state)  # clear preview after placing
+
     # !pick tile
-    elif action == ACTION_PICK_TILE:
+    if action == ACTION_PICK_TILE:
         if in_array(game_state[PLAYER_COUNT][SELECTED_TILE_INDEX], args["tile_index"]):
             game_state[PLAYER_COUNT][SELECTED_TILE_INDEX].remove(args["tile_index"])
         else:
@@ -46,7 +51,7 @@ def action_handler(global_update_callback, player, game_state, action, **args):
                 game_state[PLAYER_COUNT][SELECTED_TILE_INDEX].append(args["tile_index"])
 
     # !turn tile
-    elif action == ACTION_TURN_TILE:
+    if action == ACTION_TURN_TILE:
         if (
             game_state[player][SECOND_TILE_TURN_INDEX][0] == 0
             and game_state[player][SECOND_TILE_TURN_INDEX][1] == 1
@@ -68,12 +73,20 @@ def action_handler(global_update_callback, player, game_state, action, **args):
         ):
             game_state[player][SECOND_TILE_TURN_INDEX] = [0, 1]
 
-    # !preview tile
-    elif action == ACTION_PREVIEW_TILE:
-        print("preview not implemented")
+    # !preview tile, also updates after turning and not moving
+    if action == ACTION_PREVIEW_TILE or action == ACTION_TURN_TILE:
+        if len(game_state[PLAYER_COUNT][SELECTED_TILE_INDEX]) > 0:
+            tile = TILES[game_state[PLAYER_COUNT][SELECTED_TILE_INDEX][0]]
 
-    else:
-        raise Exception("Unsupported Action: " + action)
+            clear_previews(game_state)  # clear than overwrite
+
+            game_state[player][BIOM_INDEX_PREVIEW][args["gy"], args["gx"]] = tile[
+                TILE_INDEX_FIRST
+            ]
+            game_state[player][BIOM_INDEX_PREVIEW][
+                args["gy"] + game_state[player][SECOND_TILE_TURN_INDEX][0],
+                args["gx"] + game_state[player][SECOND_TILE_TURN_INDEX][1],
+            ] = tile[TILE_INDEX_SECOND]
 
     # trigger global update
     global_update_callback()
