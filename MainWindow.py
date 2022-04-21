@@ -8,9 +8,9 @@ CANVAS_WIDTH_SU = 30
 STATS_WIDTH_SU = 20
 TOTAL_HEIGHT_SU = 20
 
-SPRING_SIZE = 0.7
-DRAGON_SIZE = 0.25
-SHELL_SIZE = 0.1
+SPRING_SIZE = 0.88
+SEPERATION = 0.1
+ROWS = 4
 
 
 class MainCanvas(ResizingCanvas):
@@ -25,7 +25,77 @@ class MainCanvas(ResizingCanvas):
     def fill_from_game_board_state(self):
         self.clear()  # clears canvas
 
-        # TODO
+        height_segment = float(self.height) / (len(TILES) // ROWS)
+        width_segment = float(self.width) / ROWS
+
+        tiles_per_row = len(TILES) // ROWS
+        # draw tiles backlog
+        for j in range(ROWS):
+            for i in range(tiles_per_row):
+                # left square
+                self.create_rectangle(
+                    int(width_segment * j + width_segment * SEPERATION),
+                    int(height_segment * i + height_segment * SEPERATION),
+                    int(width_segment * (j + 0.5)),
+                    int(height_segment * (i + 1) - height_segment * SEPERATION),
+                    fill=COLORS[TILES[j * tiles_per_row + i][1] % SPRING],
+                )
+                # left spring
+                if TILES[j * tiles_per_row + i][1] >= SPRING:
+                    self.create_oval(
+                        int(
+                            width_segment * j
+                            + width_segment * SEPERATION
+                            + width_segment * (1 - SPRING_SIZE)
+                        ),
+                        int(
+                            height_segment * i
+                            + height_segment * SEPERATION
+                            + height_segment * (1 - SPRING_SIZE) * 2
+                        ),
+                        int(
+                            width_segment * (j + 0.5)
+                            - width_segment * (1 - SPRING_SIZE)
+                        ),
+                        int(
+                            height_segment * (i + 1)
+                            - height_segment * SEPERATION
+                            - height_segment * (1 - SPRING_SIZE) * 2
+                        ),
+                        fill="#0c008f",
+                    )
+                # right square
+                self.create_rectangle(
+                    int(width_segment * (j + 0.5)),
+                    int(height_segment * i + height_segment * SEPERATION),
+                    int(width_segment * (j + 1) - width_segment * SEPERATION),
+                    int(height_segment * (i + 1) - height_segment * SEPERATION),
+                    fill=COLORS[TILES[j * tiles_per_row + i][2] % SPRING],
+                )
+                # right spring
+                if TILES[j * tiles_per_row + i][2] >= SPRING:
+                    self.create_oval(
+                        int(
+                            width_segment * (j + 0.5)
+                            + width_segment * (1 - SPRING_SIZE)
+                        ),
+                        int(
+                            height_segment * i
+                            + height_segment * SEPERATION
+                            + height_segment * (1 - SPRING_SIZE) * 2
+                        ),
+                        int(
+                            width_segment * (j + 1)
+                            - width_segment * SEPERATION
+                            - width_segment * (1 - SPRING_SIZE)
+                        ),
+                        int(
+                            height_segment * (i + 1)
+                            - height_segment * SEPERATION
+                            - height_segment * (1 - SPRING_SIZE) * 2
+                        ),
+                        fill="#0c008f",
+                    )
 
     def clear(self):
         self.addtag_all("all")
