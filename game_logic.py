@@ -1,4 +1,5 @@
 import numpy as np
+from board_helpers import BIOM_INDEX, EGG_INDEX, SELECTED_TILE_INDEX, USED_TILE_INDEX
 from game_constants import *
 
 ACTION_SET_TILE = "ACTION_SET_TILE"
@@ -8,18 +9,23 @@ ACTION_PICK_TILE = "ACTION_PICK_TILE"
 def action_handler(global_update_callback, player, game_state, action, **args):
     print("Player " + str(player) + " wants action: " + action)
 
-    # print(game_state)
-
     if action == ACTION_SET_TILE:
-        tile = TILES[23]
-        game_state[player][0][args["gy"], args["gx"]] = tile[0]
-        game_state[player][0][args["gy"], args["gx"] + 1] = tile[1]
+        if len(game_state[PLAYER_COUNT][SELECTED_TILE_INDEX]) > 0:
+            tile = TILES[game_state[PLAYER_COUNT][SELECTED_TILE_INDEX][0]]
+
+            game_state[player][BIOM_INDEX][args["gy"], args["gx"]] = tile[
+                TILE_INDEX_FIRST
+            ]
+            game_state[player][BIOM_INDEX][args["gy"], args["gx"] + 1] = tile[
+                TILE_INDEX_SECOND
+            ]
+        else:
+            print("no tile selected")
+
     elif action == ACTION_PICK_TILE:
-        print(args["tile_index"])
+        game_state[PLAYER_COUNT][SELECTED_TILE_INDEX].append(args["tile_index"])
     else:
         raise Exception("Unsupported Action: " + action)
-
-    # print(game_state)
 
     # trigger global update
     global_update_callback()
@@ -38,7 +44,7 @@ def action_injector(global_update_callback, game_state):
 
 
 def game_description(player_index, game_state):
-    player_game_board_bioms = game_state[player_index][0]
+    player_game_board_bioms = game_state[player_index][BIOM_INDEX]
     tiles_placed = np.count_nonzero(player_game_board_bioms) // 2
 
     description_string = "Placed: " + str(tiles_placed) + "\n\n"
@@ -73,7 +79,7 @@ def calc_eggs_opened(game_state):
     eggs = [0] * (2 * EMPTY_SHELL)
 
     for i in range(PLAYER_COUNT):
-        player_game_board_eggs = game_state[i][1]
+        player_game_board_eggs = game_state[i][EGG_INDEX]
 
         eggs += np.bincount(player_game_board_eggs.flatten(), minlength=2 * EMPTY_SHELL)
 
@@ -81,7 +87,7 @@ def calc_eggs_opened(game_state):
 
 
 def calc_own_scores(player_index, game_state):
-    player_game_board_eggs = game_state[player_index][1]
+    player_game_board_eggs = game_state[player_index][EGG_INDEX]
 
     info = np.bincount(player_game_board_eggs.flatten(), minlength=2 * EMPTY_SHELL)
 

@@ -63,7 +63,11 @@ NR_DRAGONS_IN_EGGS = [
 
 # in format [tile_index, BiomIndex1, BiomIndex2]
 
-STARTING_TILE = [0, DESSERT, SNOW, False, False]
+TILE_INDEX_INDEX = 0
+TILE_INDEX_FIRST = 1
+TILE_INDEX_SECOND = 2
+
+STARTING_TILE = [0, DESSERT, SNOW]
 
 TILES = [
     [0, EMPTY_BIOM, EMPTY_BIOM],  # index placeholder

@@ -1,6 +1,11 @@
 import numpy as np
 from game_constants import *
 
+BIOM_INDEX = 0
+EGG_INDEX = 1
+USED_TILE_INDEX = 0
+SELECTED_TILE_INDEX = 1
+
 
 def init_empty_game_state():
     players = [None] * (PLAYER_COUNT + 1)
@@ -12,18 +17,24 @@ def init_empty_game_state():
         ]
 
         # add starting tile
-        players[i][0][GRID_CENTER, GRID_CENTER - 1] = STARTING_TILE[1]
-        players[i][0][GRID_CENTER, GRID_CENTER] = STARTING_TILE[2]
+        players[i][BIOM_INDEX][GRID_CENTER, GRID_CENTER - 1] = STARTING_TILE[
+            TILE_INDEX_FIRST
+        ]
+        players[i][BIOM_INDEX][GRID_CENTER, GRID_CENTER] = STARTING_TILE[
+            TILE_INDEX_SECOND
+        ]
 
         # add test dragon/shell
-        players[i][1][GRID_CENTER, GRID_CENTER] = DESSERT
-        players[i][1][GRID_CENTER + 1, GRID_CENTER] = VULCANO
-        players[i][1][GRID_CENTER, GRID_CENTER + 1] = SNOW
-        players[i][1][GRID_CENTER + 1, GRID_CENTER + 1] = MOUNTAINS
-        players[i][1][2 * GRID_CENTER, GRID_CENTER] = DESSERT + EMPTY_SHELL
-        players[i][1][2 * GRID_CENTER + 1, GRID_CENTER] = VULCANO + EMPTY_SHELL
-        players[i][1][2 * GRID_CENTER, GRID_CENTER + 1] = SNOW + EMPTY_SHELL
-        players[i][1][2 * GRID_CENTER + 1, GRID_CENTER + 1] = MOUNTAINS + EMPTY_SHELL
+        players[i][EGG_INDEX][GRID_CENTER, GRID_CENTER] = DESSERT
+        players[i][EGG_INDEX][GRID_CENTER + 1, GRID_CENTER] = VULCANO
+        players[i][EGG_INDEX][GRID_CENTER, GRID_CENTER + 1] = SNOW
+        players[i][EGG_INDEX][GRID_CENTER + 1, GRID_CENTER + 1] = MOUNTAINS
+        players[i][EGG_INDEX][2 * GRID_CENTER, GRID_CENTER] = DESSERT + EMPTY_SHELL
+        players[i][EGG_INDEX][2 * GRID_CENTER + 1, GRID_CENTER] = VULCANO + EMPTY_SHELL
+        players[i][EGG_INDEX][2 * GRID_CENTER, GRID_CENTER + 1] = SNOW + EMPTY_SHELL
+        players[i][EGG_INDEX][2 * GRID_CENTER + 1, GRID_CENTER + 1] = (
+            MOUNTAINS + EMPTY_SHELL
+        )
 
     players[PLAYER_COUNT] = [
         [],  # used tiles

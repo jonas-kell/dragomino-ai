@@ -1,6 +1,7 @@
 import tkinter as tk
 
 from ResizingCanvas import ResizingCanvas
+from board_helpers import BIOM_INDEX, EGG_INDEX
 from game_constants import *
 from game_logic import ACTION_SET_TILE
 from game_logic import game_description
@@ -29,17 +30,19 @@ class PlayerCanvas(ResizingCanvas):
         # draw tiles
         for i in range(GRID_SIZE):
             for j in range(GRID_SIZE):
-                if self.player_board_state[0][i, j] > 0:
+                if self.player_board_state[BIOM_INDEX][i, j] > 0:
                     self.create_rectangle(
                         int(self.width / GRID_SIZE * j),
                         int(self.height / GRID_SIZE * i),
                         int(self.width / GRID_SIZE * (j + 1)),
                         int(self.height / GRID_SIZE * (i + 1)),
-                        fill=COLORS[(self.player_board_state[0][i, j]) % SPRING],
+                        fill=COLORS[
+                            (self.player_board_state[BIOM_INDEX][i, j]) % SPRING
+                        ],
                     )
 
                     # draw springs
-                    if self.player_board_state[0][i, j] >= SPRING:
+                    if self.player_board_state[BIOM_INDEX][i, j] >= SPRING:
                         self.create_oval(
                             int(
                                 self.width / GRID_SIZE * j
@@ -63,12 +66,12 @@ class PlayerCanvas(ResizingCanvas):
         # draw dragons and shells
         for i in range(GRID_SIZE * 2):  # double the possibilities
             for j in range(GRID_SIZE):
-                if self.player_board_state[1][i, j] > 0:
+                if self.player_board_state[EGG_INDEX][i, j] > 0:
 
                     index_center_x = j + 0.5 if i % 2 == 0 else j
                     index_center_y = i / 2.0
 
-                    if self.player_board_state[1][i, j] < EMPTY_SHELL:
+                    if self.player_board_state[EGG_INDEX][i, j] < EMPTY_SHELL:
                         # dragon
                         self.create_oval(
                             int(
@@ -87,7 +90,9 @@ class PlayerCanvas(ResizingCanvas):
                                 self.height / GRID_SIZE * index_center_y
                                 + self.height / GRID_SIZE * DRAGON_SIZE
                             ),
-                            fill=COLORS[self.player_board_state[1][i, j]],
+                            fill=COLORS[
+                                self.player_board_state[TILE_INDEX_FIRST][i, j]
+                            ],
                             outline="#222222",
                             width=3,
                         )
@@ -130,7 +135,9 @@ class PlayerCanvas(ResizingCanvas):
                                 self.height / GRID_SIZE * index_center_y
                                 + self.height / GRID_SIZE * DRAGON_SIZE
                             ),
-                            fill=COLORS[self.player_board_state[1][i, j] % EMPTY_SHELL],
+                            fill=COLORS[
+                                self.player_board_state[EGG_INDEX][i, j] % EMPTY_SHELL
+                            ],
                             width=2,
                         )
                         self.create_line(
@@ -170,7 +177,9 @@ class PlayerCanvas(ResizingCanvas):
                                 self.height / GRID_SIZE * index_center_y
                                 + self.height / GRID_SIZE * DRAGON_SIZE
                             ),
-                            fill=COLORS[self.player_board_state[1][i, j] % EMPTY_SHELL],
+                            fill=COLORS[
+                                self.player_board_state[EGG_INDEX][i, j] % EMPTY_SHELL
+                            ],
                             width=2,
                         )
 
