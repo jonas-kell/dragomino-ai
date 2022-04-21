@@ -1,15 +1,24 @@
 import numpy as np
 from array_helpers import in_array
-from board_helpers import BIOM_INDEX, EGG_INDEX, SELECTED_TILE_INDEX, USED_TILE_INDEX
+from board_helpers import (
+    BIOM_INDEX,
+    EGG_INDEX,
+    SECOND_TILE_TURN_INDEX,
+    SELECTED_TILE_INDEX,
+    USED_TILE_INDEX,
+)
 from game_constants import *
 
 ACTION_SET_TILE = "ACTION_SET_TILE"
 ACTION_PICK_TILE = "ACTION_PICK_TILE"
+ACTION_TURN_TILE = "ACTION_TURN_TILE"
+ACTION_PREVIEW_TILE = "ACTION_PREVIEW_TILE"
 
 
 def action_handler(global_update_callback, player, game_state, action, **args):
     print("Player " + str(player) + " wants action: " + action)
 
+    # !set tile
     if action == ACTION_SET_TILE:
         if len(game_state[PLAYER_COUNT][SELECTED_TILE_INDEX]) > 0:
             tile = TILES[game_state[PLAYER_COUNT][SELECTED_TILE_INDEX].pop(0)]
@@ -17,14 +26,16 @@ def action_handler(global_update_callback, player, game_state, action, **args):
             game_state[player][BIOM_INDEX][args["gy"], args["gx"]] = tile[
                 TILE_INDEX_FIRST
             ]
-            game_state[player][BIOM_INDEX][args["gy"], args["gx"] + 1] = tile[
-                TILE_INDEX_SECOND
-            ]
+            game_state[player][BIOM_INDEX][
+                args["gy"] + game_state[player][SECOND_TILE_TURN_INDEX][0],
+                args["gx"] + game_state[player][SECOND_TILE_TURN_INDEX][1],
+            ] = tile[TILE_INDEX_SECOND]
 
             game_state[PLAYER_COUNT][USED_TILE_INDEX].append(tile[TILE_INDEX_INDEX])
         else:
             print("no tile selected")
 
+    # !pick tile
     elif action == ACTION_PICK_TILE:
         if in_array(game_state[PLAYER_COUNT][SELECTED_TILE_INDEX], args["tile_index"]):
             game_state[PLAYER_COUNT][SELECTED_TILE_INDEX].remove(args["tile_index"])
@@ -33,6 +44,34 @@ def action_handler(global_update_callback, player, game_state, action, **args):
                 print("tile already used up")
             else:
                 game_state[PLAYER_COUNT][SELECTED_TILE_INDEX].append(args["tile_index"])
+
+    # !turn tile
+    elif action == ACTION_TURN_TILE:
+        if (
+            game_state[player][SECOND_TILE_TURN_INDEX][0] == 0
+            and game_state[player][SECOND_TILE_TURN_INDEX][1] == 1
+        ):
+            game_state[player][SECOND_TILE_TURN_INDEX] = [1, 0]
+        elif (
+            game_state[player][SECOND_TILE_TURN_INDEX][0] == 1
+            and game_state[player][SECOND_TILE_TURN_INDEX][1] == 0
+        ):
+            game_state[player][SECOND_TILE_TURN_INDEX] = [0, -1]
+        elif (
+            game_state[player][SECOND_TILE_TURN_INDEX][0] == 0
+            and game_state[player][SECOND_TILE_TURN_INDEX][1] == -1
+        ):
+            game_state[player][SECOND_TILE_TURN_INDEX] = [-1, 0]
+        elif (
+            game_state[player][SECOND_TILE_TURN_INDEX][0] == -1
+            and game_state[player][SECOND_TILE_TURN_INDEX][1] == 0
+        ):
+            game_state[player][SECOND_TILE_TURN_INDEX] = [0, 1]
+
+    # !preview tile
+    elif action == ACTION_PREVIEW_TILE:
+        print("preview not implemented")
+
     else:
         raise Exception("Unsupported Action: " + action)
 

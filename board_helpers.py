@@ -3,6 +3,7 @@ from game_constants import *
 
 BIOM_INDEX = 0
 EGG_INDEX = 1
+SECOND_TILE_TURN_INDEX = 2
 USED_TILE_INDEX = 0
 SELECTED_TILE_INDEX = 1
 
@@ -14,6 +15,7 @@ def init_empty_game_state():
         players[i] = [
             np.zeros((GRID_SIZE, GRID_SIZE), dtype=np.uint8),  # bioms
             np.zeros((GRID_SIZE * 2, GRID_SIZE), dtype=np.uint8),  # eggs/dragons
+            [0, 1],  # turning: [y-offset, x-offset]
         ]
 
         # add starting tile

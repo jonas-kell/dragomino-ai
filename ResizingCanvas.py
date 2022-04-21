@@ -5,7 +5,9 @@ BACKGROUND = "grey"
 
 
 class ResizingCanvas(tk.Canvas):
-    def __init__(self, parent, click_callback, **kwargs):
+    def __init__(
+        self, parent, l_click_callback, r_click_callback, motion_calback, **kwargs
+    ):
         self.bg = BACKGROUND
         kwargs.setdefault("bg", self.bg)
         tk.Canvas.__init__(self, parent, **kwargs)
@@ -16,7 +18,12 @@ class ResizingCanvas(tk.Canvas):
         self.linewidth = 2
 
         self.bind("<Configure>", self.resize)
-        self.bind("<ButtonRelease-1>", click_callback)
+        if l_click_callback is not None:
+            self.bind("<ButtonRelease-1>", l_click_callback)
+        if r_click_callback is not None:
+            self.bind("<ButtonRelease-3>", r_click_callback)
+        if motion_calback is not None:
+            self.bind("<Motion>", motion_calback)
 
     def resize(self, event):
         # determine the ratio of old width/height to new width/height

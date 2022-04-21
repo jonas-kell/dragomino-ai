@@ -16,7 +16,7 @@ ROWS = 4
 
 class MainCanvas(ResizingCanvas):
     def __init__(self, parent, game_board_state, action_callback, **kwargs):
-        ResizingCanvas.__init__(self, parent, self.handle_click, **kwargs)
+        ResizingCanvas.__init__(self, parent, self.handle_l_click, None, None, **kwargs)
 
         self.game_board_state = game_board_state
         self.action_callback = action_callback
@@ -127,14 +127,17 @@ class MainCanvas(ResizingCanvas):
         self.addtag_all("all")
         self.delete("all")
 
-    def handle_click(self, event):
-        index = int(
+    def handle_l_click(self, event):
+        index = self.event_to_index(event)
+
+        self.action_callback(ACTION_PICK_TILE, tile_index=index)
+
+    def event_to_index(self, event):
+        return int(
             (((float(event.x) / self.width) * ROWS) // 1) * (len(TILES) // ROWS)
             + (((float(event.y) / self.height) * (len(TILES) // ROWS)) // 1)
             + 1
         )
-
-        self.action_callback(ACTION_PICK_TILE, tile_index=index)
 
     def force_redraw(self):
         self.fill_from_game_board_state()

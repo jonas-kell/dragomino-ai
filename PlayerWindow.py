@@ -3,7 +3,7 @@ import tkinter as tk
 from ResizingCanvas import ResizingCanvas
 from board_helpers import BIOM_INDEX, EGG_INDEX
 from game_constants import *
-from game_logic import ACTION_SET_TILE
+from game_logic import ACTION_PREVIEW_TILE, ACTION_SET_TILE, ACTION_TURN_TILE
 from game_logic import game_description
 
 CANVAS_WIDTH_SU = 30
@@ -17,7 +17,14 @@ SHELL_SIZE = 0.1
 
 class PlayerCanvas(ResizingCanvas):
     def __init__(self, parent, player_board_state, action_callback, **kwargs):
-        ResizingCanvas.__init__(self, parent, self.handle_click, **kwargs)
+        ResizingCanvas.__init__(
+            self,
+            parent,
+            self.handle_l_click,
+            self.handle_r_click,
+            self.handle_motion,
+            **kwargs,
+        )
 
         self.player_board_state = player_board_state
         self.action_callback = action_callback
@@ -207,11 +214,26 @@ class PlayerCanvas(ResizingCanvas):
                 fill=self.color,
             )
 
-    def handle_click(self, event):
+    def handle_l_click(self, event):
+        grid_x, grid_y = self.event_to_index(event)
+
+        self.action_callback(ACTION_SET_TILE, gx=grid_x, gy=grid_y)
+
+    def handle_r_click(self, event):
+        grid_x, grid_y = self.event_to_index(event)
+
+        self.action_callback(ACTION_TURN_TILE, gx=grid_x, gy=grid_y)
+
+    def handle_motion(self, event):
+        grid_x, grid_y = self.event_to_index(event)
+
+        self.action_callback(ACTION_PREVIEW_TILE, gx=grid_x, gy=grid_y)
+
+    def event_to_index(self, event):
         grid_x = int(((float(event.x) / self.width) * GRID_SIZE) // 1)
         grid_y = int(((float(event.y) / self.height) * GRID_SIZE) // 1)
 
-        self.action_callback(ACTION_SET_TILE, gx=grid_x, gy=grid_y)
+        return grid_x, grid_y
 
     def force_redraw(self):
         self.fill_from_player_board_state()
