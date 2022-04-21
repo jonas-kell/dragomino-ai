@@ -27,6 +27,7 @@ def init_empty_game_state():
 
     players[PLAYER_COUNT] = [
         [],  # used tiles
+        [],  # selected_tiles
     ]
 
     return players
