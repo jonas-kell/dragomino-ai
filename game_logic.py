@@ -1,4 +1,5 @@
 import numpy as np
+from array_helpers import in_array
 from board_helpers import BIOM_INDEX, EGG_INDEX, SELECTED_TILE_INDEX, USED_TILE_INDEX
 from game_constants import *
 
@@ -11,7 +12,7 @@ def action_handler(global_update_callback, player, game_state, action, **args):
 
     if action == ACTION_SET_TILE:
         if len(game_state[PLAYER_COUNT][SELECTED_TILE_INDEX]) > 0:
-            tile = TILES[game_state[PLAYER_COUNT][SELECTED_TILE_INDEX][0]]
+            tile = TILES[game_state[PLAYER_COUNT][SELECTED_TILE_INDEX].pop(0)]
 
             game_state[player][BIOM_INDEX][args["gy"], args["gx"]] = tile[
                 TILE_INDEX_FIRST
@@ -19,11 +20,19 @@ def action_handler(global_update_callback, player, game_state, action, **args):
             game_state[player][BIOM_INDEX][args["gy"], args["gx"] + 1] = tile[
                 TILE_INDEX_SECOND
             ]
+
+            game_state[PLAYER_COUNT][USED_TILE_INDEX].append(tile[TILE_INDEX_INDEX])
         else:
             print("no tile selected")
 
     elif action == ACTION_PICK_TILE:
-        game_state[PLAYER_COUNT][SELECTED_TILE_INDEX].append(args["tile_index"])
+        if in_array(game_state[PLAYER_COUNT][SELECTED_TILE_INDEX], args["tile_index"]):
+            game_state[PLAYER_COUNT][SELECTED_TILE_INDEX].remove(args["tile_index"])
+        else:
+            if in_array(game_state[PLAYER_COUNT][USED_TILE_INDEX], args["tile_index"]):
+                print("tile already used up")
+            else:
+                game_state[PLAYER_COUNT][SELECTED_TILE_INDEX].append(args["tile_index"])
     else:
         raise Exception("Unsupported Action: " + action)
 
