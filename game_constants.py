@@ -25,7 +25,7 @@ BIOM_NAMES = [
     "EMPTY",  # EMPTY_BIOM
     "SCHNEE",  # SNOW
     "WÜSTE",  # DESERT
-    "GRAß",  # PLAINS
+    "GRAS",  # PLAINS
     "WALD",  # FOREST
     "BERG",  # MOUNTAINS
     "VULKAN",  # VULCANO
