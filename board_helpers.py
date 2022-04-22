@@ -3,8 +3,9 @@ from game_constants import *
 
 BIOM_INDEX = 0
 BIOM_INDEX_PREVIEW = 1
-EGG_INDEX = 2
-SECOND_TILE_TURN_INDEX = 3
+BIOM_INDEX_PREDICTION = 2
+EGG_INDEX = 3
+SECOND_TILE_TURN_INDEX = 4
 USED_TILE_INDEX = 0
 SELECTED_TILE_INDEX = 1
 
@@ -23,6 +24,7 @@ def init_empty_game_state():
         players[i] = [
             np.zeros((GRID_SIZE, GRID_SIZE), dtype=np.uint8),  # bioms
             np.zeros((GRID_SIZE, GRID_SIZE), dtype=np.uint8),  # bioms_preview
+            np.zeros((GRID_SIZE, GRID_SIZE), dtype=np.uint8),  # bioms_prediction
             np.zeros((GRID_SIZE * 2, GRID_SIZE), dtype=np.uint8),  # eggs/dragons
             TURNING_OFFSETS[0],  # turning: [y-offset, x-offset]
         ]
@@ -46,5 +48,12 @@ def init_empty_game_state():
 def clear_previews(game_board_state):
     for i in range(PLAYER_COUNT):
         game_board_state[i][BIOM_INDEX_PREVIEW] = np.zeros(
+            (GRID_SIZE, GRID_SIZE), dtype=np.uint8
+        )
+
+
+def clear_predictions(game_board_state):
+    for i in range(PLAYER_COUNT):
+        game_board_state[i][BIOM_INDEX_PREDICTION] = np.zeros(
             (GRID_SIZE, GRID_SIZE), dtype=np.uint8
         )

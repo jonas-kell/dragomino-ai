@@ -1,7 +1,12 @@
 import tkinter as tk
 
 from ResizingCanvas import ResizingCanvas
-from board_helpers import BIOM_INDEX, BIOM_INDEX_PREVIEW, EGG_INDEX
+from board_helpers import (
+    BIOM_INDEX,
+    BIOM_INDEX_PREDICTION,
+    BIOM_INDEX_PREVIEW,
+    EGG_INDEX,
+)
 from game_constants import *
 from game_logic import (
     ACTION_PREVIEW_TILE,
@@ -48,9 +53,14 @@ class PlayerCanvas(ResizingCanvas):
             for j in range(GRID_SIZE):
                 self.draw_biom_tile(self.player_board_state[BIOM_INDEX][i, j], j, i)
 
-        # draw preview
+        # draw preview and predictions
         for i in range(GRID_SIZE):
             for j in range(GRID_SIZE):
+                # prediction
+                self.draw_biom_tile(
+                    self.player_board_state[BIOM_INDEX_PREDICTION][i, j], j, i, True
+                )
+                # preview
                 self.draw_biom_tile(
                     self.player_board_state[BIOM_INDEX_PREVIEW][i, j], j, i, True
                 )

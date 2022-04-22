@@ -2,12 +2,14 @@ import numpy as np
 from array_helpers import in_array
 from board_helpers import (
     BIOM_INDEX,
+    BIOM_INDEX_PREDICTION,
     BIOM_INDEX_PREVIEW,
     EGG_INDEX,
     SECOND_TILE_TURN_INDEX,
     SELECTED_TILE_INDEX,
     TURNING_OFFSETS,
     USED_TILE_INDEX,
+    clear_predictions,
     clear_previews,
 )
 from game_constants import *
@@ -54,6 +56,7 @@ def action_handler(global_update_callback, player, game_state, action, **args):
                 game_state[PLAYER_COUNT][USED_TILE_INDEX].append(tile[TILE_INDEX_INDEX])
 
                 clear_previews(game_state)  # clear preview after placing
+                update_predictions(game_state)  # update predictions after placing
         else:
             print("no tile selected")
 
@@ -66,6 +69,8 @@ def action_handler(global_update_callback, player, game_state, action, **args):
                 print("tile already used up")
             else:
                 game_state[PLAYER_COUNT][SELECTED_TILE_INDEX].append(args["tile_index"])
+
+        update_predictions(game_state)  # update predictions after selection change
 
     # !turn tile
     if action == ACTION_TURN_TILE:
@@ -81,15 +86,8 @@ def action_handler(global_update_callback, player, game_state, action, **args):
     # !toggle dragon eggs
     if action == ACTION_TOGGLE_EGGS:
         # check if fits on board
-        if (
-            args["t1y"] < GRID_SIZE
-            and args["t1y"] >= 0
-            and args["t1x"] < GRID_SIZE
-            and args["t1x"] >= 0
-            and args["t2y"] < GRID_SIZE
-            and args["t2y"] >= 0
-            and args["t2x"] < GRID_SIZE
-            and args["t2x"] >= 0
+        if index_on_board(args["t1x"], args["t1y"]) and index_on_board(
+            args["t2x"], args["t2y"]
         ):
             # check if tile-types match
             type1 = game_state[player][BIOM_INDEX][args["t1y"], args["t1x"]] % SPRING
@@ -247,3 +245,26 @@ def board_obstructed(board_array, index_x, index_y, offset_index_x, offset_index
 
 def tile_is_being_placed(game_board_state):
     return len(game_board_state[PLAYER_COUNT][SELECTED_TILE_INDEX]) > 0
+
+
+def update_predictions(game_board_state):
+    print("update predictions")
+    clear_predictions(game_board_state)
+
+    if len(game_board_state[PLAYER_COUNT][SELECTED_TILE_INDEX]) == 0:
+        print("no selection to predict from")
+    else:
+        for player_index in range(PLAYER_COUNT):
+            # ! real prediction logic
+            tile_1_x_best = -1
+            tile_1_y_best = -1
+            tile_1_biom_index_best = -1
+            tile_2_x_best = -1
+            tile_2_y_best = -1
+            tile_2_biom_index_best = -1
+            # for all possible positions, see if better placement
+            game_board_state[0][BIOM_INDEX_PREDICTION][0, 0] = DESSERT
+
+
+def index_on_board(x, y):
+    return x >= 0 and x < GRID_SIZE and y >= 0 and y < GRID_SIZE
