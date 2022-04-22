@@ -70,6 +70,7 @@ def action_handler(global_update_callback, player, game_state, action, **args):
             else:
                 game_state[PLAYER_COUNT][SELECTED_TILE_INDEX].append(args["tile_index"])
 
+        clear_previews(game_state)  # clear preview after selection change
         update_predictions(game_state)  # update predictions after selection change
 
     # !turn tile
