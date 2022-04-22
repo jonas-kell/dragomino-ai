@@ -8,6 +8,13 @@ SECOND_TILE_TURN_INDEX = 3
 USED_TILE_INDEX = 0
 SELECTED_TILE_INDEX = 1
 
+TURNING_OFFSETS = [
+    [0, 1],
+    [1, 0],
+    [0, -1],
+    [-1, 0],
+]
+
 
 def init_empty_game_state():
     players = [None] * (PLAYER_COUNT + 1)
@@ -17,7 +24,7 @@ def init_empty_game_state():
             np.zeros((GRID_SIZE, GRID_SIZE), dtype=np.uint8),  # bioms
             np.zeros((GRID_SIZE, GRID_SIZE), dtype=np.uint8),  # bioms_preview
             np.zeros((GRID_SIZE * 2, GRID_SIZE), dtype=np.uint8),  # eggs/dragons
-            [0, 1],  # turning: [y-offset, x-offset]
+            TURNING_OFFSETS[0],  # turning: [y-offset, x-offset]
         ]
 
         # add starting tile

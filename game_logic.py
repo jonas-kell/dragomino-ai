@@ -6,6 +6,7 @@ from board_helpers import (
     EGG_INDEX,
     SECOND_TILE_TURN_INDEX,
     SELECTED_TILE_INDEX,
+    TURNING_OFFSETS,
     USED_TILE_INDEX,
     clear_previews,
 )
@@ -68,26 +69,14 @@ def action_handler(global_update_callback, player, game_state, action, **args):
 
     # !turn tile
     if action == ACTION_TURN_TILE:
-        if (
-            game_state[player][SECOND_TILE_TURN_INDEX][0] == 0
-            and game_state[player][SECOND_TILE_TURN_INDEX][1] == 1
-        ):
-            game_state[player][SECOND_TILE_TURN_INDEX] = [1, 0]
-        elif (
-            game_state[player][SECOND_TILE_TURN_INDEX][0] == 1
-            and game_state[player][SECOND_TILE_TURN_INDEX][1] == 0
-        ):
-            game_state[player][SECOND_TILE_TURN_INDEX] = [0, -1]
-        elif (
-            game_state[player][SECOND_TILE_TURN_INDEX][0] == 0
-            and game_state[player][SECOND_TILE_TURN_INDEX][1] == -1
-        ):
-            game_state[player][SECOND_TILE_TURN_INDEX] = [-1, 0]
-        elif (
-            game_state[player][SECOND_TILE_TURN_INDEX][0] == -1
-            and game_state[player][SECOND_TILE_TURN_INDEX][1] == 0
-        ):
-            game_state[player][SECOND_TILE_TURN_INDEX] = [0, 1]
+        if game_state[player][SECOND_TILE_TURN_INDEX] == TURNING_OFFSETS[0]:
+            game_state[player][SECOND_TILE_TURN_INDEX] = TURNING_OFFSETS[1]
+        elif game_state[player][SECOND_TILE_TURN_INDEX] == TURNING_OFFSETS[1]:
+            game_state[player][SECOND_TILE_TURN_INDEX] = TURNING_OFFSETS[2]
+        elif game_state[player][SECOND_TILE_TURN_INDEX] == TURNING_OFFSETS[2]:
+            game_state[player][SECOND_TILE_TURN_INDEX] = TURNING_OFFSETS[3]
+        elif game_state[player][SECOND_TILE_TURN_INDEX] == TURNING_OFFSETS[3]:
+            game_state[player][SECOND_TILE_TURN_INDEX] = TURNING_OFFSETS[0]
 
     # !toggle dragon eggs
     if action == ACTION_TOGGLE_EGGS:
