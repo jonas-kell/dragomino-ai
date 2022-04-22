@@ -262,6 +262,8 @@ def update_predictions(game_board_state):
             tile_2_x_best = -1
             tile_2_y_best = -1
             tile_2_biom_index_best = -1
+            # ! measurement
+            score = -1
 
             # for all possible positions, see if better placement
             for possible_tile in game_board_state[PLAYER_COUNT][SELECTED_TILE_INDEX]:
@@ -291,12 +293,45 @@ def update_predictions(game_board_state):
                                         ]
                                         == 0
                                     ):
-                                        tile_1_x_best = col
-                                        tile_1_y_best = row
-                                        tile_1_biom_index_best = TILES[possible_tile][1]
-                                        tile_2_x_best = col + offset[1]
-                                        tile_2_y_best = row + offset[0]
-                                        tile_2_biom_index_best = TILES[possible_tile][2]
+                                        # compare usefulness of tile positions
+                                        new_score = 0
+                                        tile_1_x_current = col
+                                        tile_1_y_current = row
+                                        tile_2_x_current = (
+                                            col + offset[1]
+                                        )  # make sure surrounding_biome_pairs() calculate this the same
+                                        tile_2_y_current = (
+                                            row + offset[0]
+                                        )  # make sure surrounding_biome_pairs() calculate this the same
+
+                                        # biome_pair [biome_index_1, biome_index_2]
+                                        for biome_pair in surrounding_biome_pairs(
+                                            possible_tile,
+                                            game_board_state[player_index][BIOM_INDEX],
+                                            tile_1_y_current,
+                                            tile_1_x_current,
+                                            offset,
+                                        ):
+                                            if (
+                                                biome_pair[0] != 0
+                                                and biome_pair[0] % SPRING
+                                                == biome_pair[1] % SPRING
+                                            ):
+                                                new_score += 1
+
+                                        # update best tile storage
+                                        if new_score > score:
+                                            score = new_score
+                                            tile_1_x_best = tile_1_x_current
+                                            tile_1_y_best = tile_1_y_current
+                                            tile_1_biom_index_best = TILES[
+                                                possible_tile
+                                            ][TILE_INDEX_FIRST]
+                                            tile_2_x_best = tile_2_x_current
+                                            tile_2_y_best = tile_2_y_current
+                                            tile_2_biom_index_best = TILES[
+                                                possible_tile
+                                            ][TILE_INDEX_SECOND]
 
             # place prediction on board
             game_board_state[player_index][BIOM_INDEX_PREDICTION][
@@ -309,3 +344,55 @@ def update_predictions(game_board_state):
 
 def index_on_board(x, y):
     return x >= 0 and x < GRID_SIZE and y >= 0 and y < GRID_SIZE
+
+
+# biome_pair [biome_index_1, biome_index_2]
+# offset [off_y, off_x]
+def surrounding_biome_pairs(tile_index, player_biome_board, start_y, start_x, offset):
+    second_y = start_y + offset[0]
+    second_x = start_x + offset[1]
+
+    return [
+        [
+            TILES[tile_index][TILE_INDEX_FIRST],
+            player_biome_board[
+                start_y - offset[0],
+                start_x - offset[1],
+            ],
+        ],
+        [
+            TILES[tile_index][TILE_INDEX_FIRST],
+            player_biome_board[
+                start_y + (abs(offset[0]) - 1),
+                start_x + (abs(offset[1]) - 1),
+            ],
+        ],
+        [
+            TILES[tile_index][TILE_INDEX_FIRST],
+            player_biome_board[
+                start_y - (abs(offset[0]) - 1),
+                start_x - (abs(offset[1]) - 1),
+            ],
+        ],
+        [
+            TILES[tile_index][TILE_INDEX_SECOND],
+            player_biome_board[
+                second_y + offset[0],
+                second_x + offset[1],
+            ],
+        ],
+        [
+            TILES[tile_index][TILE_INDEX_SECOND],
+            player_biome_board[
+                second_y + (abs(offset[0]) - 1),
+                second_x + (abs(offset[1]) - 1),
+            ],
+        ],
+        [
+            TILES[tile_index][TILE_INDEX_SECOND],
+            player_biome_board[
+                second_y - (abs(offset[0]) - 1),
+                second_x - (abs(offset[1]) - 1),
+            ],
+        ],
+    ]
