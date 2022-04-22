@@ -312,6 +312,7 @@ def update_predictions(game_board_state):
                                             tile_1_x_current,
                                             offset,
                                         ):
+                                            # judge biom pair as score
                                             if (
                                                 biome_pair[0] != 0
                                                 and biome_pair[0] % SPRING
