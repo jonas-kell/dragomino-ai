@@ -157,7 +157,7 @@ def action_player_injector(global_update_callback, player, game_state):
 
 def action_injector(global_update_callback, game_state):
     return lambda action, **args: action_handler(
-        global_update_callback, -1, game_state, action, **args
+        global_update_callback, PLAYER_COUNT, game_state, action, **args
     )
 
 
