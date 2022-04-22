@@ -342,8 +342,7 @@ def update_predictions(game_board_state):
                                         ):
                                             # judge biom pair as score
                                             if (
-                                                biome_pair[0] != 0
-                                                and biome_pair[0] % SPRING
+                                                biome_pair[0] % SPRING
                                                 == biome_pair[1] % SPRING
                                             ):
                                                 if (
@@ -366,6 +365,16 @@ def update_predictions(game_board_state):
                                                     new_score += egg_probabilities[
                                                         biome_pair[0] % SPRING
                                                     ][PROB_INDEX_PROB]
+
+                                            elif biome_pair[1] == 0:
+                                                # if sides are incompatible, but the adjacent tile is EMPTY, value for the future use, but with penalty
+                                                new_score += (
+                                                    egg_probabilities[
+                                                        biome_pair[0] % SPRING
+                                                    ][PROB_INDEX_PROB]
+                                                    * (1 / 3)
+                                                    * (1 / 2)
+                                                )
 
                                         # update best tile storage
                                         if new_score > score:
