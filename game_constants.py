@@ -23,12 +23,12 @@ BIOMS = [SNOW, DESSERT, PLAINS, FOREST, MOUNTAINS, VULCANO]  # only for iteratio
 
 BIOM_NAMES = [
     "EMPTY",  # EMPTY_BIOM
-    "SCHNEE",  # SNOW
-    "WÜSTE",  # DESERT
-    "GRAS",  # PLAINS
-    "WALD",  # FOREST
-    "BERG",  # MOUNTAINS
-    "VULKAN",  # VULCANO
+    "SNOW",  # SNOW
+    "DESSERT",  # DESSERT
+    "PLAINS",  # PLAINS
+    "FOREST",  # FOREST
+    "MOUNTAINS",  # MOUNTAINS
+    "VULCANO",  # VULCANO
 ]
 
 COLORS = [
