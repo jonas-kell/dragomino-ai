@@ -164,7 +164,9 @@ def player_description(player_index, game_state):
         nr_dragons = egg_count[biom]
         nr_empty_eggs = egg_count[biom + EMPTY_SHELL]
         nr_dragons_left = NR_DRAGONS_IN_EGGS[biom] - nr_dragons
-        nr_eggs_left = NR_TOTAL_EGGS[biom] - nr_dragons - nr_empty_eggs
+        nr_eggs_left = (
+            NR_TOTAL_EGGS[biom] - nr_dragons - nr_empty_eggs
+        )  # TODO extract to function
 
         description_string += (
             BIOM_NAMES[biom]
@@ -254,6 +256,20 @@ def update_predictions(game_board_state):
     if len(game_board_state[PLAYER_COUNT][SELECTED_TILE_INDEX]) == 0:
         print("no selection to predict from")
     else:
+        # global statistics over egg propabilities
+        egg_count = calc_eggs_opened(game_board_state)
+        egg_propabilities = [0] * SPRING
+        for biom_index in BIOMS:
+            nr_dragons = egg_count[biom_index]
+            nr_empty_eggs = egg_count[biom_index + EMPTY_SHELL]
+            nr_dragons_left = NR_DRAGONS_IN_EGGS[biom_index] - nr_dragons
+            nr_eggs_left = NR_TOTAL_EGGS[biom_index] - nr_dragons - nr_empty_eggs
+
+            egg_propabilities[biom_index] = (
+                nr_dragons_left / nr_eggs_left
+            )  # TODO extract to function
+
+        # iterate over players predictions
         for player_index in range(PLAYER_COUNT):
             # ! real prediction logic
             tile_1_x_best = -1
@@ -318,7 +334,21 @@ def update_predictions(game_board_state):
                                                 and biome_pair[0] % SPRING
                                                 == biome_pair[1] % SPRING
                                             ):
-                                                new_score += 1
+                                                if (
+                                                    biome_pair[0] >= SPRING
+                                                    or biome_pair[1] >= SPRING
+                                                ):
+                                                    # spring tiles are valued approximately double
+                                                    new_score += (
+                                                        2
+                                                        * egg_propabilities[
+                                                            biome_pair[0] % SPRING
+                                                        ]
+                                                    )
+                                                else:
+                                                    new_score += egg_propabilities[
+                                                        biome_pair[0] % SPRING
+                                                    ]
 
                                         # update best tile storage
                                         if new_score > score:
