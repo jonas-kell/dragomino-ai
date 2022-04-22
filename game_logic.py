@@ -350,14 +350,19 @@ def update_predictions(game_board_state):
                                                     biome_pair[0] >= SPRING
                                                     or biome_pair[1] >= SPRING
                                                 ):
-                                                    # spring tiles are valued approximately double
+                                                    # spring tiles are valued by the (approximate) probability to get at least one dragon out of two eggs
                                                     new_score += (
-                                                        2
-                                                        * egg_probabilities[
-                                                            biome_pair[0] % SPRING
-                                                        ][PROB_INDEX_PROB]
+                                                        1
+                                                        - (
+                                                            1
+                                                            - egg_probabilities[
+                                                                biome_pair[0] % SPRING
+                                                            ][PROB_INDEX_PROB]
+                                                        )
+                                                        ** 2
                                                     )
                                                 else:
+                                                    # non-spring tiles are valued by the probability to get a dragon
                                                     new_score += egg_probabilities[
                                                         biome_pair[0] % SPRING
                                                     ][PROB_INDEX_PROB]
