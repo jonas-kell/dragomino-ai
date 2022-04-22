@@ -346,53 +346,63 @@ def index_on_board(x, y):
     return x >= 0 and x < GRID_SIZE and y >= 0 and y < GRID_SIZE
 
 
-# biome_pair [biome_index_1, biome_index_2]
+# -> biome_pair [biome_index_1, biome_index_2]
 # offset [off_y, off_x]
+# start_y, start_x should describe X, second be H (as per offset), generates the Pairs X,O and H,M like:
+#   O
+# O X O
+# M H M
+#   M
 def surrounding_biome_pairs(tile_index, player_biome_board, start_y, start_x, offset):
     second_y = start_y + offset[0]
     second_x = start_x + offset[1]
 
-    return [
+    # [first_biome_index, y_to_take_from_player, x_to_take_from_player]
+    preform = [
         [
             TILES[tile_index][TILE_INDEX_FIRST],
-            player_biome_board[
-                start_y - offset[0],
-                start_x - offset[1],
-            ],
-        ],
-        [
-            TILES[tile_index][TILE_INDEX_FIRST],
-            player_biome_board[
-                start_y + (abs(offset[0]) - 1),
-                start_x + (abs(offset[1]) - 1),
-            ],
+            start_y - offset[0],
+            start_x - offset[1],
         ],
         [
             TILES[tile_index][TILE_INDEX_FIRST],
-            player_biome_board[
-                start_y - (abs(offset[0]) - 1),
-                start_x - (abs(offset[1]) - 1),
-            ],
+            start_y + (abs(offset[0]) - 1),
+            start_x + (abs(offset[1]) - 1),
+        ],
+        [
+            TILES[tile_index][TILE_INDEX_FIRST],
+            start_y - (abs(offset[0]) - 1),
+            start_x - (abs(offset[1]) - 1),
         ],
         [
             TILES[tile_index][TILE_INDEX_SECOND],
-            player_biome_board[
-                second_y + offset[0],
-                second_x + offset[1],
-            ],
+            second_y + offset[0],
+            second_x + offset[1],
         ],
         [
             TILES[tile_index][TILE_INDEX_SECOND],
-            player_biome_board[
-                second_y + (abs(offset[0]) - 1),
-                second_x + (abs(offset[1]) - 1),
-            ],
+            second_y + (abs(offset[0]) - 1),
+            second_x + (abs(offset[1]) - 1),
         ],
         [
             TILES[tile_index][TILE_INDEX_SECOND],
-            player_biome_board[
-                second_y - (abs(offset[0]) - 1),
-                second_x - (abs(offset[1]) - 1),
-            ],
+            second_y - (abs(offset[0]) - 1),
+            second_x - (abs(offset[1]) - 1),
         ],
     ]
+
+    # biome_pair [biome_index_1, biome_index_2], where second biom index can be taken from board
+    results = []
+    for possibility in preform:
+        if index_on_board(possibility[2], possibility[1]):
+            results.append(
+                [
+                    possibility[0],  # preselected index
+                    player_biome_board[
+                        possibility[1],  # y_from_player_board
+                        possibility[2],  # x_from_player_board
+                    ],
+                ]
+            )
+
+    return results
