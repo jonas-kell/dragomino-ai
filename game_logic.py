@@ -256,16 +256,16 @@ def update_predictions(game_board_state):
     if len(game_board_state[PLAYER_COUNT][SELECTED_TILE_INDEX]) == 0:
         print("no selection to predict from")
     else:
-        # global statistics over egg propabilities
+        # global statistics over egg probabilities
         egg_count = calc_eggs_opened(game_board_state)
-        egg_propabilities = [0] * SPRING
+        egg_probabilities = [0] * SPRING
         for biom_index in BIOMS:
             nr_dragons = egg_count[biom_index]
             nr_empty_eggs = egg_count[biom_index + EMPTY_SHELL]
             nr_dragons_left = NR_DRAGONS_IN_EGGS[biom_index] - nr_dragons
             nr_eggs_left = NR_TOTAL_EGGS[biom_index] - nr_dragons - nr_empty_eggs
 
-            egg_propabilities[biom_index] = (
+            egg_probabilities[biom_index] = (
                 nr_dragons_left / nr_eggs_left
             )  # TODO extract to function
 
@@ -341,12 +341,12 @@ def update_predictions(game_board_state):
                                                     # spring tiles are valued approximately double
                                                     new_score += (
                                                         2
-                                                        * egg_propabilities[
+                                                        * egg_probabilities[
                                                             biome_pair[0] % SPRING
                                                         ]
                                                     )
                                                 else:
-                                                    new_score += egg_propabilities[
+                                                    new_score += egg_probabilities[
                                                         biome_pair[0] % SPRING
                                                     ]
 
