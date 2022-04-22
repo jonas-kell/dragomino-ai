@@ -262,8 +262,49 @@ def update_predictions(game_board_state):
             tile_2_x_best = -1
             tile_2_y_best = -1
             tile_2_biom_index_best = -1
+
             # for all possible positions, see if better placement
-            game_board_state[0][BIOM_INDEX_PREDICTION][0, 0] = DESSERT
+            for possible_tile in game_board_state[PLAYER_COUNT][SELECTED_TILE_INDEX]:
+                for row in range(GRID_SIZE):
+                    for col in range(GRID_SIZE):
+                        # only if starting position is valid
+                        if game_board_state[player_index][BIOM_INDEX][row, col] == 0:
+                            # test all offsets, if there is an adjacent tile
+                            adjacent = False
+                            for offset in TURNING_OFFSETS:
+                                if (
+                                    index_on_board(row + offset[0], col + offset[1])
+                                    and game_board_state[player_index][BIOM_INDEX][
+                                        row + offset[0], col + offset[1]
+                                    ]
+                                    != 0
+                                ):
+                                    adjacent = True
+                            # only continue if an adjacent tile is there
+                            if adjacent:
+                                # now only try to place on the empty squares
+                                for offset in TURNING_OFFSETS:
+                                    if (
+                                        index_on_board(row + offset[0], col + offset[1])
+                                        and game_board_state[player_index][BIOM_INDEX][
+                                            row + offset[0], col + offset[1]
+                                        ]
+                                        == 0
+                                    ):
+                                        tile_1_x_best = col
+                                        tile_1_y_best = row
+                                        tile_1_biom_index_best = TILES[possible_tile][1]
+                                        tile_2_x_best = col + offset[1]
+                                        tile_2_y_best = row + offset[0]
+                                        tile_2_biom_index_best = TILES[possible_tile][2]
+
+            # place prediction on board
+            game_board_state[player_index][BIOM_INDEX_PREDICTION][
+                tile_1_y_best, tile_1_x_best
+            ] = tile_1_biom_index_best
+            game_board_state[player_index][BIOM_INDEX_PREDICTION][
+                tile_2_y_best, tile_2_x_best
+            ] = tile_2_biom_index_best
 
 
 def index_on_board(x, y):
