@@ -28,18 +28,6 @@ def init_empty_game_state():
             TILE_INDEX_SECOND
         ]
 
-        # add test dragon/shell
-        players[i][EGG_INDEX][GRID_CENTER, GRID_CENTER] = DESSERT
-        players[i][EGG_INDEX][GRID_CENTER + 1, GRID_CENTER] = VULCANO
-        players[i][EGG_INDEX][GRID_CENTER, GRID_CENTER + 1] = SNOW
-        players[i][EGG_INDEX][GRID_CENTER + 1, GRID_CENTER + 1] = MOUNTAINS
-        players[i][EGG_INDEX][2 * GRID_CENTER, GRID_CENTER] = DESSERT + EMPTY_SHELL
-        players[i][EGG_INDEX][2 * GRID_CENTER + 1, GRID_CENTER] = VULCANO + EMPTY_SHELL
-        players[i][EGG_INDEX][2 * GRID_CENTER, GRID_CENTER + 1] = SNOW + EMPTY_SHELL
-        players[i][EGG_INDEX][2 * GRID_CENTER + 1, GRID_CENTER + 1] = (
-            MOUNTAINS + EMPTY_SHELL
-        )
-
     players[PLAYER_COUNT] = [
         [],  # used tiles
         [],  # selected_tiles

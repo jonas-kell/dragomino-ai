@@ -3,7 +3,13 @@ import tkinter as tk
 from ResizingCanvas import ResizingCanvas
 from board_helpers import BIOM_INDEX, BIOM_INDEX_PREVIEW, EGG_INDEX
 from game_constants import *
-from game_logic import ACTION_PREVIEW_TILE, ACTION_SET_TILE, ACTION_TURN_TILE
+from game_logic import (
+    ACTION_PREVIEW_TILE,
+    ACTION_SET_TILE,
+    ACTION_TOGGLE_EGGS,
+    ACTION_TURN_TILE,
+    tile_is_being_placed,
+)
 from game_logic import game_description
 
 CANVAS_WIDTH_SU = 30
@@ -16,7 +22,9 @@ SHELL_SIZE = 0.1
 
 
 class PlayerCanvas(ResizingCanvas):
-    def __init__(self, parent, player_board_state, action_callback, **kwargs):
+    def __init__(
+        self, parent, player_index, game_board_state, action_callback, **kwargs
+    ):
         ResizingCanvas.__init__(
             self,
             parent,
@@ -26,7 +34,8 @@ class PlayerCanvas(ResizingCanvas):
             **kwargs,
         )
 
-        self.player_board_state = player_board_state
+        self.game_board_state = game_board_state
+        self.player_board_state = game_board_state[player_index]
         self.action_callback = action_callback
 
         self.fill_from_player_board_state()
@@ -227,9 +236,22 @@ class PlayerCanvas(ResizingCanvas):
         self.action_callback(ACTION_SET_TILE, gx=grid_x, gy=grid_y)
 
     def handle_r_click(self, event):
-        grid_x, grid_y = self.event_to_index(event)
+        if tile_is_being_placed(self.game_board_state):
+            grid_x, grid_y = self.event_to_index(event)
 
-        self.action_callback(ACTION_TURN_TILE, gx=grid_x, gy=grid_y)
+            self.action_callback(ACTION_TURN_TILE, gx=grid_x, gy=grid_y)
+        else:
+            ex, ey, t_1_x, t_1_y, t_2_x, t_2_y = self.event_to_egg_index(event)
+
+            self.action_callback(
+                ACTION_TOGGLE_EGGS,
+                ex=ex,
+                ey=ey,
+                t1x=t_1_x,
+                t1y=t_1_y,
+                t2x=t_2_x,
+                t2y=t_2_y,
+            )
 
     def handle_motion(self, event):
         grid_x, grid_y = self.event_to_index(event)
@@ -241,6 +263,47 @@ class PlayerCanvas(ResizingCanvas):
         grid_y = int(((float(event.y) / self.height) * GRID_SIZE) // 1)
 
         return grid_x, grid_y
+
+    def event_to_egg_index(self, event):
+        # get first tile (the one hovered over)
+        tile_1_index_x, tile_1_index_y = self.event_to_index(event)
+
+        # get second tile (the one closest)
+        center_x = (tile_1_index_x + 0.5) * (self.width / GRID_SIZE)
+        center_y = (tile_1_index_y + 0.5) * (self.height / GRID_SIZE)
+        difference_x = center_x - event.x
+        difference_y = center_y - event.y
+        y_more_important = abs(difference_y) > abs(difference_x)
+        if y_more_important:
+            tile_2_index_x = tile_1_index_x
+            tile_2_index_y = tile_1_index_y + (-1 if difference_y > 0 else 1)
+        else:
+            tile_2_index_x = tile_1_index_x + (-1 if difference_x > 0 else 1)
+            tile_2_index_y = tile_1_index_y
+
+        # swap, to let the more top left one in index 1
+        if tile_1_index_x > tile_2_index_x:
+            swap = tile_2_index_x
+            tile_2_index_x = tile_1_index_x
+            tile_1_index_x = swap
+
+        if tile_1_index_y > tile_2_index_y:
+            swap = tile_2_index_y
+            tile_2_index_y = tile_1_index_y
+            tile_1_index_y = swap
+
+        # translate the tile indicees to egg index
+        egg_index_x = tile_2_index_x
+        egg_index_y = tile_1_index_y + tile_2_index_y + 1
+
+        return (
+            egg_index_x,
+            egg_index_y,
+            tile_1_index_x,
+            tile_1_index_y,
+            tile_2_index_x,
+            tile_2_index_y,
+        )
 
     def force_redraw(self):
         self.fill_from_player_board_state()
@@ -280,7 +343,8 @@ class PlayerWindow:
         # canvas to fill space
         self.canvas = PlayerCanvas(
             self.tkwindow,
-            self.game_board_state[self.player_index],
+            self.player_index,
+            self.game_board_state,
             self.action_callback,
             highlightthickness=0,
         )
