@@ -161,7 +161,7 @@ def action_injector(global_update_callback, game_state):
     )
 
 
-def game_description(player_index, game_state):
+def player_description(player_index, game_state):
     player_game_board_bioms = game_state[player_index][BIOM_INDEX]
     tiles_placed = np.count_nonzero(player_game_board_bioms) // 2
 
@@ -188,6 +188,18 @@ def game_description(player_index, game_state):
             + "->"
             + str(int(nr_dragons_left / nr_eggs_left * 100))
             + "%\n"
+        )
+
+    return description_string
+
+
+def main_description(game_state):
+    description_string = "Pl. -> Dragons/Shells \n"
+
+    for player in range(PLAYER_COUNT):
+        dragons, eggs = calc_own_scores(player, game_state)
+        description_string += (
+            str(player) + " -> " + str(dragons) + "/" + str(eggs) + "\n"
         )
 
     return description_string

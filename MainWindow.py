@@ -3,7 +3,7 @@ import tkinter as tk
 from ResizingCanvas import ResizingCanvas
 from board_helpers import SELECTED_TILE_INDEX, USED_TILE_INDEX
 from game_constants import *
-from game_logic import ACTION_PICK_TILE
+from game_logic import ACTION_PICK_TILE, main_description
 
 CANVAS_WIDTH_SU = 30
 STATS_WIDTH_SU = 20
@@ -162,7 +162,7 @@ class MainWindow:
 
         # right aligned text box
         self.description = tk.StringVar()
-        self.description.set("asd")
+        self.description.set(main_description(self.game_board_state))
         self.stats = tk.Label(
             self.tkframe,
             width=STATS_WIDTH_SU,
@@ -181,5 +181,5 @@ class MainWindow:
         self.canvas.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
 
     def force_redraw(self):
-        self.description.set("asd")
+        self.description.set(main_description(self.game_board_state))
         self.canvas.force_redraw()

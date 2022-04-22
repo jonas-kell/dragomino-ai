@@ -9,8 +9,8 @@ from game_logic import (
     ACTION_TOGGLE_EGGS,
     ACTION_TURN_TILE,
     tile_is_being_placed,
+    player_description,
 )
-from game_logic import game_description
 
 CANVAS_WIDTH_SU = 30
 STATS_WIDTH_SU = 20
@@ -331,7 +331,9 @@ class PlayerWindow:
 
         # right aligned text box
         self.description = tk.StringVar()
-        self.description.set(game_description(self.player_index, self.game_board_state))
+        self.description.set(
+            player_description(self.player_index, self.game_board_state)
+        )
         self.stats = tk.Label(
             self.tkwindow,
             width=STATS_WIDTH_SU,
@@ -351,5 +353,7 @@ class PlayerWindow:
         self.canvas.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
 
     def force_redraw(self):
-        self.description.set(game_description(self.player_index, self.game_board_state))
+        self.description.set(
+            player_description(self.player_index, self.game_board_state)
+        )
         self.canvas.force_redraw()
