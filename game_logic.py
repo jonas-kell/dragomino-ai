@@ -91,20 +91,35 @@ def action_handler(global_update_callback, player, game_state, action, **args):
 
     # !toggle dragon eggs
     if action == ACTION_TOGGLE_EGGS:
-        # check if tile-types match
-        type1 = game_state[player][BIOM_INDEX][args["t1y"], args["t1x"]] % SPRING
-        type2 = game_state[player][BIOM_INDEX][args["t2y"], args["t2x"]] % SPRING
-        if type1 != 0 and type1 == type2:
-            if game_state[player][EGG_INDEX][args["ey"], args["ex"]] == 0:
-                game_state[player][EGG_INDEX][args["ey"], args["ex"]] = type1
-            elif game_state[player][EGG_INDEX][args["ey"], args["ex"]] < EMPTY_SHELL:
-                game_state[player][EGG_INDEX][args["ey"], args["ex"]] = (
-                    type1 + EMPTY_SHELL
-                )
+        # check if fits on board
+        if (
+            args["t1y"] < GRID_SIZE
+            and args["t1y"] >= 0
+            and args["t1x"] < GRID_SIZE
+            and args["t1x"] >= 0
+            and args["t2y"] < GRID_SIZE
+            and args["t2y"] >= 0
+            and args["t2x"] < GRID_SIZE
+            and args["t2x"] >= 0
+        ):
+            # check if tile-types match
+            type1 = game_state[player][BIOM_INDEX][args["t1y"], args["t1x"]] % SPRING
+            type2 = game_state[player][BIOM_INDEX][args["t2y"], args["t2x"]] % SPRING
+            if type1 != 0 and type1 == type2:
+                if game_state[player][EGG_INDEX][args["ey"], args["ex"]] == 0:
+                    game_state[player][EGG_INDEX][args["ey"], args["ex"]] = type1
+                elif (
+                    game_state[player][EGG_INDEX][args["ey"], args["ex"]] < EMPTY_SHELL
+                ):
+                    game_state[player][EGG_INDEX][args["ey"], args["ex"]] = (
+                        type1 + EMPTY_SHELL
+                    )
+                else:
+                    game_state[player][EGG_INDEX][args["ey"], args["ex"]] = 0
             else:
-                game_state[player][EGG_INDEX][args["ey"], args["ex"]] = 0
+                print("criteria for egg toggeling not met")
         else:
-            print("criteria for egg toggeling not met")
+            print("egg toggeling out of bounds")
 
     # !preview tile, also updates after turning and not moving
     if action == ACTION_PREVIEW_TILE or action == ACTION_TURN_TILE:
