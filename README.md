@@ -20,3 +20,14 @@ Just run the `main.py` script:
 ```
 python main.py
 ```
+
+# Usage
+Number of players can be adjusted via the `PLAYER_COUNT` variable in `game_constants.py`. I sady have not yet fount a good way to make it dynamic.
+
+Tiles can be selected with leftclick on the main window. Then the predictions get shown in the player windows.
+Tiles can be placed with leftclick in the player-windows. The first selected tile will be placed.
+To place a different one, deselect tiles in the main window.
+
+Tiles can be rotated with right click during placing.
+
+If no tile is selected, shells/dragons can be toggled with rightclick on matching connections.
