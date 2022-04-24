@@ -1,6 +1,6 @@
 # Dragomino Ai
 
-Graphic interface to assist with the playing of the game [Dragomino](https://www.spiel-des-jahres.de/spiele/dragomino/).
+Graphic interface to assist with the playing of the game [Dragomino](https://pegasusshop.de/sortiment/spiele/kinderspiele/11649/dragomino-kinderspiel-des-jahres-2021) [Spiel-Des-Jahres](https://www.spiel-des-jahres.de/spiele/dragomino/).
 
 Calculates probabilities on the fly. 
 Even includes a basic predition method trying to advise on the best placement of the next tile.
