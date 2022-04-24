@@ -23,7 +23,9 @@ python main.py
 # Run in the browser
 This project can be run with [REPLIT](https://replit.com/). Just klick [HERE](https://replit.com/@jonas-kell/dragomino-ai).
 
-You can minimize The left most two panels. Only the output panel is neede. Clicking `RUN` should be sufficient.
+You can minimize The `file` panel. Clicking `RUN` should be sufficient. Sometimes you need to click on the App-Arrow and the RUN button and sometimes you need to sove a captcha.
+
+On a chrome-browser with a 4k-Monitor zooming to `250%` and going to fullscreen `F11` looks best.
 
 # Usage
 Number of players can be adjusted via the `PLAYER_COUNT` variable in `game_constants.py`. I sady have not yet fount a good way to make it dynamic.
