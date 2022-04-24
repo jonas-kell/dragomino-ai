@@ -20,6 +20,10 @@ Just run the `main.py` script:
 ```
 python main.py
 ```
+# Run in the browser
+This project can be run with [REPLIT](https://replit.com/). Just klick [HERE](https://replit.com/@jonas-kell/dragomino-ai).
+
+You can minimize The left most two panels. Only the output panel is neede. Clicking `RUN` should be sufficient.
 
 # Usage
 Number of players can be adjusted via the `PLAYER_COUNT` variable in `game_constants.py`. I sady have not yet fount a good way to make it dynamic.
