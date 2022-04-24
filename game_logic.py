@@ -153,11 +153,11 @@ def player_description(player_index, game_state):
     player_game_board_bioms = game_state[player_index][BIOM_INDEX]
     tiles_placed = np.count_nonzero(player_game_board_bioms) // 2
 
-    description_string = "Placed: " + str(tiles_placed) + "\n\n"
+    description_string = "Placed: " + str(tiles_placed) + "\n"
 
     description_string += "Own Dragons/Own Shells: \n"
     dragons, eggs = calc_own_scores(player_index, game_state)
-    description_string += str(dragons) + "/" + str(eggs) + "\n\n"
+    description_string += str(dragons) + "/" + str(eggs) + "\n"
 
     description_string += "Dg Left/Eggs -> Chance\n"
     probabilities = calc_egg_probabilities(game_state)

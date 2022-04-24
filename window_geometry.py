@@ -3,7 +3,7 @@ local_window_height = 350
 local_spacing = 30
 
 online_window_width = 450
-online_window_height = 200
+online_window_height = 190
 online_spacing = 25
 
 window_geometry = {
